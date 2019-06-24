@@ -1,0 +1,177 @@
+body {
+    font-family: 'Titillium Web', sans-serif;
+    margin: 0px;
+}
+.wista-navbar {
+    font-size: 20px;
+    height: 40px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, .7);
+    overflow: hidden;
+}
+.wista-nav-item {
+    display: inline-block;
+    color: white;
+}
+
+.wista-nav-item.start {
+    background-color: #30425e;
+    padding: 10px;
+    float: left;
+}
+
+.wista-nav-item.right {
+    float: right;
+}
+
+.wista-nav-item.logout {
+    background-color: #c13c3cc0;
+    padding: 10px;
+}
+
+.wista-nav-item.logout:hover {
+    background-color: #c13c3c80;
+}
+
+.wista-nav-item.combined {
+    background-color: #bcbcbd4d;
+    display: flex;
+}
+
+.wista-nav-item.combined:hover {
+    background-color: #bcbcbd4d;
+}
+
+.wista-nav-item.combined .material-icons {
+    background-color: grey;
+    padding: 10px;
+}
+
+.wista-nav-item.combined .text {
+    position: relative;
+    top: 3px;
+    padding: 10px 15px 10px 20px;
+    font-size: .7rem;
+}
+
+.wista-nav-item.special {
+    background-color: #3983b5c2;
+    padding: 10px;
+}
+
+.wista-nav-item.default {
+    float: left;
+    padding: 12px;
+    font-size: 12px;
+    background-color: rgba(255, 255, 255, .1);
+}
+
+.wista-nav-item.leave {
+    float: right;
+    padding: 12px;
+    font-size: 12px;
+    background-color: #ff7e00;
+    color: white;
+}
+.wista-nav-item.save {
+    float: right;
+    padding: 12px;
+    font-size: 12px;
+    background-color: #3b743b;
+    color: white;
+}
+.wista-nav-item.locked {
+    background-color: rgb(153, 58, 54);
+    padding: 10px;
+
+}
+
+.wista-nav-item.default:hover {
+    background-color: rgba(255, 255, 255, .2);
+}
+
+.wista-nav-item.disabled {
+    color: rgba(255, 255, 255, .2);
+}
+.wista-nav-item .icon {
+    font-size: 20px;
+}
+.wista-nav-item.text {
+    font-size: 14px;
+    padding: 9px 20px 11px 20px;
+}
+#content {
+    overflow: auto;
+}
+.morph-box {
+    min-width: 100%;
+    width: fit-content;
+    height: calc(100% - 20px);
+}
+.morph-box .headline {
+    background-color: #39619996;
+    color: white;
+    font-size: 1.2rem;
+}
+.morph-box .body {
+    font-size: .8rem;
+}
+.morph-box .body .row:nth-child(even){
+    background-color: #39619917;
+}
+.morph-box .body .row:nth-child(odd){
+    background-color: white;
+}
+.morph-box .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    border-bottom: 0.1px solid grey;
+}
+.morph-box .cell {
+    padding: 0.5rem;
+    min-width: 200px;
+}
+.morph-box .cell.placeholder {
+    background-color: #ff950030;
+}
+.morph-box .dimension {
+    width: 150px;
+    text-align: center;
+    background-color: rgba(0,0,0, 0.05);
+}
+.morph-box .value {
+    flex: flex-grow;
+    flex-basis: 0;
+    flex-grow: 1;
+}
+.footer {
+    position: absolute;
+    bottom: 0px;
+    width: calc(100% - 10px);
+    height: 60px;
+    background-color: rgba(0,0,0,.2);
+    text-align: center;
+    padding: 5px;
+}
+.footer .footer-item {
+    color: grey;
+    width: 150px;
+    height: 55px;
+    background-color: white;
+    display: inline-block;
+}
+.footer .footer-item .text {
+    font-size: 38px;
+    margin-right: 5px;
+    color: #30425e;
+}
+.footer .footer-item.approaches {
+    border-bottom: 5px solid orange;
+}
+.footer .footer-item.dimensions {
+    border-bottom: 5px solid green;
+}
+.footer .footer-item.properties {
+    border-bottom: 5px solid rgb(0, 195, 255);
+}
