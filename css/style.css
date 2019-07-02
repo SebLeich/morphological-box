@@ -103,6 +103,14 @@ body {
 #content {
     overflow: auto;
 }
+#details {
+    width: 0%;
+    height: 100%;
+}
+.content-area {
+    flex-basis: 0;
+    flex-grow: 1;
+}
 .morph-box {
     min-width: 100%;
     width: fit-content;
@@ -131,6 +139,9 @@ body {
 .morph-box .cell {
     padding: 0.5rem;
     min-width: 200px;
+}
+.morph-box .cell.desc-available {
+    cursor: pointer;
 }
 .morph-box .cell.placeholder {
     background-color: #ff950030;
@@ -161,17 +172,81 @@ body {
     background-color: white;
     display: inline-block;
 }
+.footer .footer-item.flex-width {
+    width: auto;
+    padding: 0px 10px 0px 10px;
+    cursor: pointer;
+}
 .footer .footer-item .text {
     font-size: 38px;
     margin-right: 5px;
     color: #30425e;
 }
-.footer .footer-item.approaches {
+.footer .footer-item.approaches, .footer-item.current-approach {
     border-bottom: 5px solid orange;
 }
 .footer .footer-item.dimensions {
-    border-bottom: 5px solid green;
+    border-bottom: 5px solid rgb(68, 150, 68);
 }
 .footer .footer-item.properties {
-    border-bottom: 5px solid rgb(0, 195, 255);
+    border-bottom: 5px solid #3c6cbd;
+}
+.details-view {
+    padding: 0px 10px;
+    height: 100%;
+    overflow-y: auto;
+}
+.closer {
+    font-size: 3rem;
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    color: #aa4545;
+    cursor: pointer;
+}
+.details-view .headline {
+    text-transform: uppercase;
+    font-size: 2rem;
+    text-decoration: underline #183f65;
+}
+.details-view .approach-suggestion {
+    padding-left: 2rem;
+    cursor: pointer;
+}
+.details-view .desc {
+    display: block;
+    color: rgba(0,0,0,.8);
+}
+.details-view .subtitle {
+    margin-left: 10px;
+    font-size: .8rem;
+    color: rgba(0,0,0,.8);
+}
+.details-view .source, .details-view .approaches {
+    display: block;
+    font-size: .8rem;
+}
+.details-view .source .icon, .details-view .approaches .icon {
+    margin-right: 10px;
+    position: relative;
+    top: 6px;
+    color: #183f65;
+}
+.tag {
+    padding: 2px 5px;
+    margin: 5px 2px 2px 0px;
+    font-size: .5rem;
+    display: inline-block;
+}
+.tag-dimension {
+    background-color: rgb(68, 150, 68);
+    color: white;
+}
+.tag-attribute {
+    background-color: #3c6cbd;
+    color: white;
+}
+.tag-approach {
+    background-color: orange;
+    color: white;
 }

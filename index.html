@@ -24,8 +24,8 @@
         <input id="approach-filter" list="approaches" type="text" placeholder="select an evaluation approach"
             style="float: right; border: .5px solid rgba(0,0,0,.7);font-size: 14px;padding: 11px 20px 11px 20px; width: 250px;" />
     </div>
-    <div style="padding: .5rem; height: calc(100% - 125px);">
-        <div id="content">
+    <div style="padding: .5rem; height: calc(100% - 125px); display: flex;">
+        <div id="content" class="content-area">
             <div id="morph-box" class="morph-box">
                 <div class="headline row">
                     <div class="dimension cell">dimension</div>
@@ -34,8 +34,11 @@
                 <div class="body"></div>
             </div>
         </div>
+        <div id="details" class="content-area" style="display: none; position: relative;">
+            <i id="details-closer" class="closer material-icons fixed">clear</i>
+        </div>
     </div>
-    <div class="footer">
+    <div id="overview-footer" class="footer">
         <div class="footer-item dimensions">
             <span class="text"></span>
             dimensions
@@ -47,6 +50,12 @@
         <div class="footer-item properties">
             <span class="text"></span>
             properties
+        </div>
+    </div>
+    <div id="details-footer" class="footer" style="display: none;">
+        <div class="footer-item flex-width current-approach approach-invoker">
+            <span class="text"></span>
+            details
         </div>
     </div>
     <datalist id="approaches"></datalist>

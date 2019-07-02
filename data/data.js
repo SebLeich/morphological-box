@@ -7,6 +7,23 @@ class Approach {
         this.sources = object.sources;
         this.attributes = object.attributes;
     }
+    /**
+     * the method creates the details view of the approach
+     */
+    generateDetailView(){
+        console.log(this);
+        var html = "<div class='details-view'><div class='tag-panel'>";
+        html += "<div class='tag tag-approach'>approach</div><div class='tag tag-attribute'>" + this.attributes.length + " attributes</div>";
+        html += "</div><span class='headline'>" + this.name + "</span>";
+        if(this.short != null && typeof(this.short) != "undefined"){
+            html += "<span class='subtitle'>(" + this.short + ")</span>";
+        }
+        for(var index in this.sources){
+            html += "<span class='source'><i class='material-icons icon'>import_contacts</i>" + this.sources[index] + "</span>";
+        }
+        html += "</div>";
+        return html;
+    }
     toDatalistOption(){
         var html = "<option>[" + this.id + "] " + this.name;
         if(this.short != null){
@@ -14,6 +31,13 @@ class Approach {
         }
         html += "</option>";
         return html;
+    }
+    toString(){
+        if(this.short != null && typeof(this.short) != "undefined"){
+            return this.short;
+        } else {
+            return this.name;
+        }
     }
 }
 class Attribute {
@@ -24,8 +48,36 @@ class Attribute {
         this.dim = object.dim;
         this.source = object.source;
     }
+    /**
+     * the method creates the details view of the attribute
+     */
+    generateDetailView(){
+        var html = "<div class='details-view'><div class='tag-panel'>";
+        var d = dimensions.find(x => x.id == this.dim);
+        html += "<div class='tag tag-attribute'>attribute</div><div class='tag tag-dimension'>" + d.toString() + "</div>";
+        html += "</div><span class='headline'>" + this.title + "</span><span class='desc'>" + this.desc + "</span><span class='source'><i class='material-icons icon'>import_contacts</i>" + this.source + "</span><span class='approaches'><i class='material-icons icon'>list_alt</i>the property is used in the following evaluation approaches:</span>";
+        var a = approaches.filter(x => x.attributes.includes(this.id));
+        for(var index in a){
+            html += "<span class='approach-suggestion' data-approach='" + a[index].id + "'>- " + a[index].toString() + "</span>";
+        }
+        html += "</div>";
+        return html;
+    }
+    get hasContent(){
+        if(this.desc != null && typeof(this.desc) != "undefined") return true;
+        return false;
+    }
 }
 class Builder {
+    static clearDetails(){
+        $("#details > *").not(".fixed").remove();
+    }
+    static hideDetails(){
+        $("#details").hide();
+    }
+    static showDetails(){
+        $("#details").show();
+    }
     static start(){
         $(".footer-item.dimensions .text").text(dimensions.length);
         $(".footer-item.approaches .text").text(approaches.length);
@@ -38,6 +90,38 @@ class Builder {
             var content = d.generateListView();
             $("#morph-box .body").append(content.html);
         }
+        if(!$("#details-closer").hasClass("click-event-added")){
+            $("#details-closer").addClass("click-event-added");
+            $("#details-closer").click(function(){
+                Builder.hideDetails();
+            });
+        }
+        $(".desc-available").each(function(){
+            if(!$(this).hasClass("click-event-added")){
+                $(this).addClass("click-event-added");
+                $(this).click(function(){
+                    Builder.clearDetails();
+                    var a = attributes.find(x => x.id == $(this).data("attr"));
+                    if(a != null && typeof(a) != "undefined"){
+                        $("#details").append(a.generateDetailView());
+                        Builder.showDetails();
+                    }
+                });
+            }
+        });
+        $(".approach-invoker").each(function(){
+            if(!$(this).hasClass("click-event-added")){
+                $(this).addClass("click-event-added");
+                $(this).click(function(){
+                    Builder.clearDetails();
+                    var a = approaches.find(x => x.id == $(this).data("approach"));
+                    if(a != null && typeof(a) != "undefined"){
+                        $("#details").append(a.generateDetailView());
+                        Builder.showDetails();
+                    }
+                });
+            }
+        });
         if(!$("#approach-filter").hasClass("keyup-event-added")){
             $("#approach-filter").addClass("keyup-event-added");
             $("#approach-filter").on("keyup", function(){
@@ -51,8 +135,15 @@ class Builder {
                             $("[data-attr='" + attributes[index].id + "']").fadeOut(100);
                         }
                     }
+                    Builder.hideDetails();
+                    $("#overview-footer").hide();
+                    $(".footer-item.current-approach .text").text(a.toString());
+                    $(".footer-item.current-approach").data("approach", a.id);
+                    $("#details-footer").show();
                 } else {
                     $(".cell").show();
+                    $("#details-footer").hide();
+                    $("#overview-footer").show();
                 }
             });   
         }
@@ -64,9 +155,6 @@ class Dimension {
         this.title = object.title;
         this.desc = object.desc;
     }
-    addExplorerListener(widget, id){
-
-    }
     generateListView(){
         var allAttrs = attributes.filter(x => x.dim === this.id);
         var html = "<div id='" + this.id + "' class='row'><div id='" + this.id + "' class='dimension cell'>" + this.title + "</div>";
@@ -75,11 +163,18 @@ class Dimension {
         } else {
             for(var index in allAttrs){
                 var a = allAttrs[index];
-                html += "<div class='value cell' data-attr='" + a.id + "'>" + a.title + "</div>";
+                var classString = "value cell";
+                if(a.hasContent){
+                    classString += " desc-available";
+                }
+                html += "<div class='" + classString + "' data-attr='" + a.id + "'>" + a.title + "</div>";
             }
         }
         html += "</div>";
         return { html: html, id: this.id };
+    }
+    toString(){
+        return this.title;
     }
 }
 var approaches = [
@@ -87,7 +182,7 @@ var approaches = [
         id: 1,
         name: "Method Evaluation Model",
         short: "MEM",
-        attributes: [1, 2],
+        attributes: [1, 2, 74],
         sources: [
             "https://link.springer.com/article/10.1007/s13173-010-0003-5"
         ],
@@ -99,7 +194,7 @@ var approaches = [
         id: 2,
         name: "semiotic model quality framework",
         short: "SEQUAL",
-        attributes: [66, 4, 16, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 50, 51, 60, 61, 63, 67, 68],
+        attributes: [66, 4, 16, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 50, 51, 60, 61, 63, 67, 68, 74],
         sources: [
             "Quality in Business Process Modeling (Krogstie, 2016)"
         ],
@@ -111,7 +206,7 @@ var approaches = [
         id: 3,
         name: "Bunge-Wand-Weber",
         short: "BWW",
-        attributes: [1, 4, 63],
+        attributes: [1, 4, 63, 74],
         sources: [
             "https://link.springer.com/article/10.1007/s13173-010-0003-5"
         ]
@@ -129,7 +224,7 @@ var approaches = [
         id: 5,
         name: "MAPQUAL",
         short: null,
-        attributes: [13, 14, 16, 63, 64],
+        attributes: [13, 14, 16, 63, 64, 74],
         authors: [
             "Nossum", "Krogstie"
         ],
@@ -141,7 +236,7 @@ var approaches = [
         id: 6,
         name: "SEQUAL-EM",
         short: null,
-        attributes: [11, 16],
+        attributes: [11, 16, 74],
         sources: [
             "Quality in Business Process Modeling (Krogstie, 2016)"
         ]
@@ -150,7 +245,7 @@ var approaches = [
         id: 7,
         name: "GOMS",
         short: null,
-        attributes: [15, 64],
+        attributes: [15, 64, 74, 75],
         sources: [
             
         ]
@@ -172,7 +267,7 @@ var approaches = [
         note: [
             "key characteristics in ISO/IEC 9126"
         ],
-        attributes: [3, 17, 18, 19, 20, 21, 22, 63, 64],
+        attributes: [3, 17, 18, 19, 20, 21, 22, 63, 64, 74, 75],
         sources: [
             "Quality in Business Process Modeling (Krogstie, 2016)"
         ]
@@ -199,7 +294,7 @@ var approaches = [
         id: 12,
         name: "SEQUAL-BPM",
         short: null,
-        attributes: [11],
+        attributes: [11, 74],
         sources: [
             62
         ]
@@ -208,7 +303,7 @@ var approaches = [
         id: 13,
         name: "GOM II",
         short: null,
-        attributes: [10, 65],
+        attributes: [10, 65, 74],
         sources: [
             
         ]
@@ -247,7 +342,7 @@ var approaches = [
         id: 17,
         name: "guidelines to achieve enterprise modeling quality",
         short: null,
-        attributes: [11, 37, 45, 46, 47, 64],
+        attributes: [11, 37, 45, 46, 47, 64, 74],
         sources: [
             "Quality in Business Process Modeling (Krogstie, 2016), p. 63 f"
         ],
@@ -259,7 +354,7 @@ var approaches = [
         id: 18,
         name: "7 pragmatic guidelines",
         short: "7PMG",
-        attributes: [10, 53, 54, 55, 56, 57, 58, 59, 62, 63, 64],
+        attributes: [10, 53, 54, 55, 56, 57, 58, 59, 62, 63, 64, 74],
         sources: [
             "Quality in Business Process Modeling (Krogstie, 2016), p. 88 f",
             "http://wwwis.win.tue.nl/~wvdaalst/publications/p574.pdf"
@@ -272,7 +367,7 @@ var approaches = [
         id: 19,
         name: "use of reference models",
         short: null,
-        attributes: [4, 64],
+        attributes: [3, 4, 23, 25, 26, 28, 29, 64, 69, 70, 71, 72, 73, 74],
         sources: [
             "Quality in Business Process Modeling (Krogstie, 2016), p. 91 f"
         ],
@@ -411,8 +506,9 @@ var attributes = [
     new Attribute({
         id: 23,
         title: "physical quality",
+        desc: "it must be physically represented in a persistent form that is available to those who will potentially want to reuse it",
         dim: 5,
-        source: "Quality in Business Process Modeling (Krogstie, 2016), p. 66"
+        source: "Quality in Business Process Modeling (Krogstie, 2016), p. 66, 91"
     }),
     new Attribute({
         id: 24,
@@ -424,7 +520,7 @@ var attributes = [
         id: 25,
         title: "syntactical quality",
         dim: 5,
-        source: "Quality in Business Process Modeling (Krogstie, 2016), p. 66"
+        source: "Quality in Business Process Modeling (Krogstie, 2016), p. 66, 91"
     }),
     new Attribute({
         id: 26,
@@ -697,6 +793,50 @@ var attributes = [
         id: 68,
         title: "UML",
         dim: 8
+    }),    
+    new Attribute({
+        id: 69,
+        title: "successfully used, i.e. in SAP (EPK)",
+        source: "Quality in Business Process Modeling (Krogstie, 2016), p. 92",
+        dim: 11
+    }),
+    new Attribute({
+        id: 70,
+        title: "economic perspective",
+        desc: "These criteria address different aspects of the costs and beneﬁts of using the reference model (cf. how reuse ties into the deontic quality level of SEQUAL). Although reference models are aimed at reducing costs, their use will also cause costs. Costs are in relation to the introduction (Table 2.3), transformation and analysis (Table 2.4), and maintenance of the reference models (Table 2.5). Using a reference model promises a number of beneﬁts. Two categories are proposed for this purpose: efﬁciency (Table 2.6) and ﬂexibility (Table 2.7). The relevance of each point depends a lot on the goal of modeling. As discussed in Chap. 1, one of the goals of all models should act to foster communication. An overview of aspects in this regard is found in Table 2.8. Taking into account that using a reference model can cause substantial investments, the question of how these investments are protected is a core issue, as outlined in Table 2.9.",
+        source: "Quality in Business Process Modeling (Krogstie, 2016), p. 92",
+        dim: 12
+    }),
+    new Attribute({
+        id: 71,
+        title: "deployment perspective",
+        desc: "The success of a reference model depends heavily on the ability and willingness of the users to address the model. Important aspects in this regard are outlined in Table 2.10.",
+        source: "Quality in Business Process Modeling (Krogstie, 2016), p. 92",
+        dim: 12
+    }),
+    new Attribute({
+        id: 72,
+        title: "engineering perspective",
+        desc: "From an engineering perspective, two questions are important: Does the model fulﬁll the requirements to be taken into account? Is the speciﬁcation appropriate for supporting the intended purposes of the model? These questions are detailed in Table 2.11.",
+        source: "Quality in Business Process Modeling (Krogstie, 2016), p. 96",
+        dim: 12
+    }),
+    new Attribute({
+        id: 73,
+        title: "epistemological perspective",
+        desc: "This perspective serves to enrich the evaluation of reference models with epistemological considerations. Detailed aspects are described in Table 2.12.",
+        source: "Quality in Business Process Modeling (Krogstie, 2016), p. 96",
+        dim: 12
+    }),
+    new Attribute({
+        id: 74,
+        title: "theoretical artifacts",
+        dim: 9
+    }),
+    new Attribute({
+        id: 75,
+        title: "executable artifacts",
+        dim: 9
     })
 ];
 var dimensions = [
@@ -739,5 +879,13 @@ var dimensions = [
     new Dimension({
         id: 10,
         title: "empirical evaluation"
+    }),
+    new Dimension({
+        id: 12,
+        title: "considered perspectives"
+    }),
+    new Dimension({
+        id: 11,
+        title: "additional information"
     })
 ]
