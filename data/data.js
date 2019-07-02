@@ -1,182 +1,6 @@
-class Approach {
-    constructor(object){
-        this.id = object.id;
-        this.name = object.name;
-        this.short = object.short;
-        this.origin = object.origin;
-        this.sources = object.sources;
-        this.attributes = object.attributes;
-    }
-    /**
-     * the method creates the details view of the approach
-     */
-    generateDetailView(){
-        console.log(this);
-        var html = "<div class='details-view'><div class='tag-panel'>";
-        html += "<div class='tag tag-approach'>approach</div><div class='tag tag-attribute'>" + this.attributes.length + " attributes</div>";
-        html += "</div><span class='headline'>" + this.name + "</span>";
-        if(this.short != null && typeof(this.short) != "undefined"){
-            html += "<span class='subtitle'>(" + this.short + ")</span>";
-        }
-        for(var index in this.sources){
-            html += "<span class='source'><i class='material-icons icon'>import_contacts</i>" + this.sources[index] + "</span>";
-        }
-        html += "</div>";
-        return html;
-    }
-    toDatalistOption(){
-        var html = "<option>[" + this.id + "] " + this.name;
-        if(this.short != null){
-            html += " (" + this.short + ")";
-        }
-        html += "</option>";
-        return html;
-    }
-    toString(){
-        if(this.short != null && typeof(this.short) != "undefined"){
-            return this.short;
-        } else {
-            return this.name;
-        }
-    }
-}
-class Attribute {
-    constructor(object){
-        this.id = object.id;
-        this.title = object.title;
-        this.desc = object.desc;
-        this.dim = object.dim;
-        this.source = object.source;
-    }
-    /**
-     * the method creates the details view of the attribute
-     */
-    generateDetailView(){
-        var html = "<div class='details-view'><div class='tag-panel'>";
-        var d = dimensions.find(x => x.id == this.dim);
-        html += "<div class='tag tag-attribute'>attribute</div><div class='tag tag-dimension'>" + d.toString() + "</div>";
-        html += "</div><span class='headline'>" + this.title + "</span><span class='desc'>" + this.desc + "</span><span class='source'><i class='material-icons icon'>import_contacts</i>" + this.source + "</span><span class='approaches'><i class='material-icons icon'>list_alt</i>the property is used in the following evaluation approaches:</span>";
-        var a = approaches.filter(x => x.attributes.includes(this.id));
-        for(var index in a){
-            html += "<span class='approach-suggestion' data-approach='" + a[index].id + "'>- " + a[index].toString() + "</span>";
-        }
-        html += "</div>";
-        return html;
-    }
-    get hasContent(){
-        if(this.desc != null && typeof(this.desc) != "undefined") return true;
-        return false;
-    }
-}
-class Builder {
-    static clearDetails(){
-        $("#details > *").not(".fixed").remove();
-    }
-    static hideDetails(){
-        $("#details").hide();
-    }
-    static showDetails(){
-        $("#details").show();
-    }
-    static start(){
-        $(".footer-item.dimensions .text").text(dimensions.length);
-        $(".footer-item.approaches .text").text(approaches.length);
-        $(".footer-item.properties .text").text(attributes.length);
-        for(var index in approaches){
-            $("#approaches").append(approaches[index].toDatalistOption());
-        }
-        for(var index in dimensions){
-            var d = dimensions[index];
-            var content = d.generateListView();
-            $("#morph-box .body").append(content.html);
-        }
-        if(!$("#details-closer").hasClass("click-event-added")){
-            $("#details-closer").addClass("click-event-added");
-            $("#details-closer").click(function(){
-                Builder.hideDetails();
-            });
-        }
-        $(".desc-available").each(function(){
-            if(!$(this).hasClass("click-event-added")){
-                $(this).addClass("click-event-added");
-                $(this).click(function(){
-                    Builder.clearDetails();
-                    var a = attributes.find(x => x.id == $(this).data("attr"));
-                    if(a != null && typeof(a) != "undefined"){
-                        $("#details").append(a.generateDetailView());
-                        Builder.showDetails();
-                    }
-                });
-            }
-        });
-        $(".approach-invoker").each(function(){
-            if(!$(this).hasClass("click-event-added")){
-                $(this).addClass("click-event-added");
-                $(this).click(function(){
-                    Builder.clearDetails();
-                    var a = approaches.find(x => x.id == $(this).data("approach"));
-                    if(a != null && typeof(a) != "undefined"){
-                        $("#details").append(a.generateDetailView());
-                        Builder.showDetails();
-                    }
-                });
-            }
-        });
-        if(!$("#approach-filter").hasClass("keyup-event-added")){
-            $("#approach-filter").addClass("keyup-event-added");
-            $("#approach-filter").on("keyup", function(){
-                var v = $(this).val().match(/\[(.*?)\]/);
-                if(v != null){
-                    var a = approaches.find(x => x.id == v[1]);
-                    for(var index in attributes){
-                        if(a.attributes.includes(attributes[index].id)){
-                            $("[data-attr='" + attributes[index].id + "']").show();
-                        } else {
-                            $("[data-attr='" + attributes[index].id + "']").fadeOut(100);
-                        }
-                    }
-                    Builder.hideDetails();
-                    $("#overview-footer").hide();
-                    $(".footer-item.current-approach .text").text(a.toString());
-                    $(".footer-item.current-approach").data("approach", a.id);
-                    $("#details-footer").show();
-                } else {
-                    $(".cell").show();
-                    $("#details-footer").hide();
-                    $("#overview-footer").show();
-                }
-            });   
-        }
-    }
-}
-class Dimension {
-    constructor(object){
-        this.id = object.id;
-        this.title = object.title;
-        this.desc = object.desc;
-    }
-    generateListView(){
-        var allAttrs = attributes.filter(x => x.dim === this.id);
-        var html = "<div id='" + this.id + "' class='row'><div id='" + this.id + "' class='dimension cell'>" + this.title + "</div>";
-        if(allAttrs.length == 0){
-            html += "<div class='value cell placeholder'>there is no information provided yet</div>";
-        } else {
-            for(var index in allAttrs){
-                var a = allAttrs[index];
-                var classString = "value cell";
-                if(a.hasContent){
-                    classString += " desc-available";
-                }
-                html += "<div class='" + classString + "' data-attr='" + a.id + "'>" + a.title + "</div>";
-            }
-        }
-        html += "</div>";
-        return { html: html, id: this.id };
-    }
-    toString(){
-        return this.title;
-    }
-}
+/**
+ * the list contians all evaluation approaches
+ */
 var approaches = [
     new Approach({
         id: 1,
@@ -188,6 +12,9 @@ var approaches = [
         ],
         authors: [
             "Moody", "Shanks"
+        ],
+        procedure: [
+
         ]
     }),
     new Approach({
@@ -204,11 +31,37 @@ var approaches = [
     }),
     new Approach({
         id: 3,
-        name: "Bunge-Wand-Weber",
+        name: "Bunge-Wand-Weber ontology",
         short: "BWW",
-        attributes: [1, 4, 63, 74],
+        attributes: [1, 4, 63, 74, 76, 77, 78, 79, 80, 81, 82, 83],
         sources: [
-            "https://link.springer.com/article/10.1007/s13173-010-0003-5"
+            "https://link.springer.com/article/10.1007/s13173-010-0003-5",
+            "Ontologische Evaluierung von Referenzmodellen auf Basis des Bunge-Wand-Weber-Modells (Fettke & Loos, 2003)"
+        ],
+        authors: [
+
+        ],
+        procedure: [
+            new Step({
+                sequNr: 1,
+                title: "construction of the transformation rules",
+                desc: "Because their is no standardized language for modeling reference models, it is important to normalize them for comparison. The transformation rules for normalization depict the elements of the ontology on the elements of the modeling language (representation mapping). The mapping of modeling language elements on the ontology elements is called interpretation mapping. Their are 4 kinds of deficits: incompleteness (less elements in modeling language as in the ontology), redundancy (an element of the ontology has more representations in the modeling language), overpowering (more elements in the modeling language than in the ontology) & overload (an element of the modeling language has more mappings to the ontology)"
+            }),
+            new Step({
+                sequNr: 2,
+                title: "identification of the modelling deficits",
+                desc: ""
+            }),
+            new Step({
+                sequNr: 3,
+                title: "transformation of the reference model",
+                desc: ""
+            }),
+            new Step({
+                sequNr: 4,
+                title: "evaluation of the results",
+                desc: ""
+            })
         ]
     }),
     new Approach({
@@ -301,9 +154,9 @@ var approaches = [
     }),
     new Approach({
         id: 13,
-        name: "GOM II",
-        short: null,
-        attributes: [10, 65, 74],
+        name: "Grundsätze ordnungsmäßiger Modellierung II",
+        short: "GOM II",
+        attributes: [10, 65, 74, 76],
         sources: [
             
         ]
@@ -376,6 +229,9 @@ var approaches = [
         ]
     })
 ];
+/**
+ * the list contains all attributes of the evaluation approaches
+ */
 var attributes = [
     new Attribute({
         id: 1,
@@ -837,8 +693,66 @@ var attributes = [
         id: 75,
         title: "executable artifacts",
         dim: 9
+    }),
+    new Attribute({
+        id: 76,
+        title: "evaluation of a modeling language based on the reference model",
+        source: "Ontologische Evaluierung von Referenzmodellen auf Basis des Bunge-Wand-Weber-Modells (Fettke & Loos, 2003), p. 157",
+        dim: 3
+    }),
+    new Attribute({
+        id: 77,
+        title: "BWW object",
+        desc: "An elementary, physical object of the real world (e.g. person, book), no abstract objects (e.g. address, time). A BWW object can also be a composite object representing a set of BWW objects or BWW compositions. BWW objects has BWW properties.",
+        source: "Ontologische Evaluierung von Referenzmodellen auf Basis des Bunge-Wand-Weber-Modells (Fettke & Loos, 2003), p. 158",
+        dim: 4
+    }),
+    new Attribute({
+        id: 78,
+        title: "BWW property",
+        desc: "BWW properties are always depicted on BWW objects used a function. They can be related to one or many objects. The missing of a BWW property is no property itself.",
+        source: "Ontologische Evaluierung von Referenzmodellen auf Basis des Bunge-Wand-Weber-Modells (Fettke & Loos, 2003), p. 158",
+        dim: 4
+    }),
+    new Attribute({
+        id: 79,
+        title: "BWW event",
+        desc: "BWW events are defined by a change of a BWW object's state.",
+        source: "Ontologische Evaluierung von Referenzmodellen auf Basis des Bunge-Wand-Weber-Modells (Fettke & Loos, 2003), p. 158",
+        dim: 4
+    }),
+    new Attribute({
+        id: 80,
+        title: "BWW state",
+        desc: "BWW states defines the state of a BWW object.",
+        source: "Ontologische Evaluierung von Referenzmodellen auf Basis des Bunge-Wand-Weber-Modells (Fettke & Loos, 2003), p. 158",
+        dim: 4
+    }),
+    new Attribute({
+        id: 81,
+        title: "BWW class",
+        desc: "A BWW class is a set of BWW objects with one specific BWW property.",
+        source: "Ontologische Evaluierung von Referenzmodellen auf Basis des Bunge-Wand-Weber-Modells (Fettke & Loos, 2003), p. 159",
+        dim: 4
+    }),
+    new Attribute({
+        id: 82,
+        title: "BWW genus",
+        desc: "A BWW genus is a set of BWW objects with more than one simular BWW property.",
+        source: "Ontologische Evaluierung von Referenzmodellen auf Basis des Bunge-Wand-Weber-Modells (Fettke & Loos, 2003), p. 159",
+        dim: 4
+    }),
+    new Attribute({
+        id: 83,
+        title: "reference model normalization",
+        desc: "A concept containing a transformation of a reference model into an ontological model. The aim is to create a uniform and comparable representation of the structure of different reference models. It can be compared with the normalization of a databasescheme. The normalization contains at least four steps: construction of the transformation rules, identification of modeling deficits, transformation of the reference model and evaluation of the results.",
+        source: "Ontologische Evaluierung von Referenzmodellen auf Basis des Bunge-Wand-Weber-Modells (Fettke & Loos, 2003), p. 157",
+        dim: 3
     })
 ];
+/**
+ * the list contains all dimensions of the attributes
+ */
 var dimensions = [
     new Dimension({
         id: 1,
