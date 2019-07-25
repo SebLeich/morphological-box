@@ -5,6 +5,8 @@
     <script src="lib/jquery.js"></script>
     <script src="js/classes.js"></script>
     <script src="data/data.js"></script>
+    <script src="lib/Chart.min.js"></script>
+    <script src="lib/chartjs-plugin-datalabels.min.js"></script>
     <link rel="stylesheet" href="lib/material-icons-master/iconfont/material-icons.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap" rel="stylesheet">
@@ -17,7 +19,7 @@
             <i class="material-icons icon">school</i>
         </span>
         <span class="wista-nav-item text" style="float: left; background-color: #7ea5cc47;" data-target="undo">
-            evaluation of modeling languages
+            evaluation of modelling languages
         </span>
         <span class="wista-nav-item special loop" style="float: right;" data-target="redo">
             <i class="material-icons icon">search</i>
@@ -55,12 +57,22 @@
             <span class="text"></span>
             properties
         </div>
+        <div id="toggle-chart-cp" class="footer-chart">
+            <i class="material-icons icon">timeline</i>
+        </div>
     </div>
     <div id="details-footer" class="footer" style="display: none;">
         <div class="footer-item flex-width current-approach approach-invoker">
             <span class="text"></span>
             details
         </div>
+        <div class="footer-item properties">
+            <span class="text"></span>
+            properties
+        </div>
+    </div>
+    <div id="chart-cp-container">
+        <div id="chart-cp-container-content"></div>
     </div>
     <datalist id="approaches"></datalist>
 </body>
