@@ -366,6 +366,44 @@ class Builder {
             return output;
     }
     /**
+     * the method returns all unrestricted attributes
+     */
+    static getUnrestrictedAttributes(){
+        var output = attributes.map(x => x.id);
+        for(var index in iterationConditions){
+            var c = iterationConditions[index];
+            if(c.passFunction != null && typeof(c.passFunction) != "undefined" && c.active === true && c.overwrittenBy.length == 0){
+                var o = c.passFunction();
+                for(var i in o){
+                    if(o[i].value === false && typeof(o[i].attribute) != "undefined"){
+                        var f = output.indexOf(parseInt(o[i].attribute));
+                        if(f > -1) output.splice(f, 1);
+                    }
+                }
+            }
+        }
+        return output;
+    }
+    /**
+     * the method returns all unrestricted dimensions
+     */
+    static getUnrestrictedDimensions(){
+        var output = dimensions.map(x => x.id);
+        for(var index in iterationConditions){
+            var c = iterationConditions[index];
+            if(c.passFunction != null && typeof(c.passFunction) != "undefined" && c.active == true && c.overwrittenBy.length == 0){
+                var o = c.passFunction();
+                for(var i in o){
+                    if(o[i].value == false && typeof(o[i].dimension) != "undefined"){
+                        var f = output.indexOf(parseInt(o[i].dimension));
+                        if(f > -1) output.splice(f, 1);
+                    }
+                }
+            }
+        }
+        return output;
+    }
+    /**
      * the method hides the details view window
      */
     static hideDetails() {
@@ -384,13 +422,17 @@ class Builder {
         $(".footer-item.dimensions .text").text(dimensions.length);
         $(".footer-item.approaches .text").text(approaches.length);
         $(".footer-item.properties .text").text(attributes.length);
+        var uRD = Builder.getUnrestrictedDimensions();
+        var uRA = Builder.getUnrestrictedAttributes();
         for (var index in approaches) {
             $("#approaches").append(approaches[index].toDatalistOption());
         }
         for (var index in dimensions) {
             var d = dimensions[index];
-            var content = d.generateListView();
-            $("#morph-box .body").append(content.html);
+            if(uRD.includes(d.id)){
+                var content = d.generateListView(uRA);
+                $("#morph-box .body").append(content.html);
+            }
         }
         for(var index in iterationSteps){
             var isNotLast = true;
@@ -668,8 +710,8 @@ class Dimension {
     /**
      * the method generates the dimension's table row
      */
-    generateListView() {
-        var allAttrs = attributes.filter(x => x.dim === this.id);
+    generateListView(unrestricted) {
+        var allAttrs = attributes.filter(x => x.dim === this.id && unrestricted.includes(x.id));
         var html = "<div id='" + this.id + "' class='row'><div id='" + this.id + "' class='dimension cell'>" + this.title + "</div>";
         if (allAttrs.length == 0) {
             html += "<div class='value cell placeholder'>there is no information provided yet</div>";
@@ -721,6 +763,8 @@ class IterationCondition {
         this.type = object.type;
         this.exec = object.exec;
         this.overwrittenBy = object.overwrittenBy;
+        this.passFunction = object.passFunction;
+        this.active = object.active;
     }
     /**
      * the method creates the string representation of the instance
@@ -759,6 +803,7 @@ class IterationStep {
                     $("#nick-container").hide();
                     var content = instance.contentProvider();
                     for(var index in content) $("#nick-detail-container-content").append("<div class='iteration-step-preview' style='overflow-y: auto;'>" + content[index] + "</div>");
+                    $("#nick-detail-container-content").append("<div style='min-width: 10px;'></div>");
                 });
             }
         }

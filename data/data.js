@@ -729,12 +729,14 @@ var attributes = [
     new Attribute({
         id: 63,
         title: "modelling language",
-        dim: 9
+        dim: 9,
+        desc: "the approach focus on methodology assessment"
     }),
     new Attribute({
         id: 64,
         title: "artifacts",
-        dim: 9
+        dim: 9,
+        desc: "the approach focus on artifacts assessment such as models"
     }),
     new Attribute({
         id: 65,
@@ -1556,7 +1558,7 @@ var iterationConditions = [
                 var d = o[index];
                 var dim = dimensions.filter(x => x.id == index)[0];
                 html += "<tr><td>" + dim.toString() + "</td><td>";
-                if(d.contained.length == 0){
+                if(d.missed.length == 0){
                     html += "<i class='material-icons' style='color: green;'>done</i>";
                 } else {
                     html += "<i class='material-icons' style='color: red;'>clear</i>";
@@ -1564,54 +1566,94 @@ var iterationConditions = [
                 html += "</td></tr>";
             }
             return html + "</tbody></table>";
-        }, overwrittenBy: [ "restricted parsimony" ]
+        }, overwrittenBy: [ "restricted parsimony" ], active: true,
+        passFunction: function(){
+            var output = [];
+            var o = Builder.getApproachesWithinDimensions();
+            for(var index in o){
+                if(o[index].missed.length == 0){
+                    output.push({ dimension: index, value: true });
+                } else {
+                    output.push({ dimension: index, value: false });
+                }
+            }
+            return output;
+        }
     }),
-    new IterationCondition({ type: "subjective", title: "robustness", exec: function(){
-        var html = "<div class='cond-head";
-        if(this.overwrittenBy.length > 0){
-            html += " overwritten";
+    new IterationCondition({ type: "subjective", title: "robustness",
+        exec: function(){
+            var html = "<div class='cond-head";
+            if(this.overwrittenBy.length > 0){
+                html += " overwritten";
+            }
+            html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
+            for(var index in dimensions){
+                var dim = dimensions[index];
+                html += "<tr><td>" + dim.toString() + "</td><td><i class='material-icons' style='color: green;'>done</i></td></tr>";
+            }
+            return html + "</tbody></table>";
+        }, overwrittenBy: [],
+        passFunction: function(){
+            return [];
         }
-        html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
-        for(var index in dimensions){
-            var dim = dimensions[index];
-            html += "<tr><td>" + dim.toString() + "</td><td><i class='material-icons' style='color: green;'>done</i></td></tr>";
+    }),
+    new IterationCondition({ type: "subjective", title: "comprehensibility",
+        exec: function(){
+            var html = "<div class='cond-head";
+            if(this.overwrittenBy.length > 0){
+                html += " overwritten";
+            }
+            html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span>";
+            if(this.overwrittenBy.length > 0){
+                html += "<span class='overwritten-ext'>overwritten by '" + this.overwrittenBy + "'</span>";
+            }
+            html += "</div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
+            for(var index in attributes){
+                var a = attributes[index];
+                var d = dimensions.find(x => x.id == a.dim);
+                html += "<tr><td>" + a.toString() + "</td><td>" + d.toString() + "</td></tr>";
+            }
+            return html + "</tbody></table>";
+        }, overwrittenBy: [ "restricted comprehensibility" ], active: true,
+        passFunction: function(){
+            return [];
         }
-        return html + "</tbody></table>";
-    }, overwrittenBy: [] }),
-    new IterationCondition({ type: "subjective", title: "comprehensibility", exec: function(){
-        var html = "<div class='cond-head";
-        if(this.overwrittenBy.length > 0){
-            html += " overwritten";
-        }
-        html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
-        for(var index in attributes){
-            var a = attributes[index];
-            var d = dimensions.find(x => x.id == a.dim);
-            html += "<tr><td>" + a.toString() + "</td><td>" + d.toString() + "</td></tr>";
-        }
-        return html + "</tbody></table>";
-    }, overwrittenBy: [ "restricted comprehensibility" ] }),
+    }),
     new IterationCondition({ type: "subjective", title: "expandability", exec: function(){
         return "<div class='cond-head'><i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now</div>";
     }, overwrittenBy: [] }),
-    new IterationCondition({ type: "subjective", title: "explanatory characteristic", exec: function(){
-        var html = "<div class='cond-head";
-        if(this.overwrittenBy.length > 0){
-            html += " overwritten";
-        }
-        html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
-        for(var index in attributes){
-            var a = attributes[index];
-            html += "<tr><td>" + a.toString() + "</td><td>";
-            if(a.desc == null){
-                html += "<i class='material-icons' style='color: red;'>clear</i>";
-            } else {
-                html += "<i class='material-icons' style='color: green;'>done</i>";
+    new IterationCondition({ type: "subjective", title: "explanatory characteristic",
+        exec: function(){
+            var html = "<div class='cond-head";
+            if(this.overwrittenBy.length > 0){
+                html += " overwritten";
             }
-            html += "</td></tr>";
+            html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
+            for(var index in attributes){
+                var a = attributes[index];
+                html += "<tr><td>" + a.toString() + "</td><td>";
+                if(a.desc == null){
+                    html += "<i class='material-icons' style='color: red;'>clear</i>";
+                } else {
+                    html += "<i class='material-icons' style='color: green;'>done</i>";
+                }
+                html += "</td></tr>";
+            }
+            return html + "</tbody></table>";
+        }, overwrittenBy: [], active: true,
+        passFunction: function(){
+            var output = [];
+            for(var index in attributes){
+                var a = attributes[index];
+                if(a.desc == null){
+                    output.push({ value: false, attribute: a.id });
+                } else {
+                    output.push({ value: true, attribute: a.id });
+                }
+            }
+            return output;
         }
-        return html + "</tbody></table>";
-    }, overwrittenBy: [] }),
+    }),
     new IterationCondition({ type: "subjective", title: "restricted parsimony",
         exec: function(){
             var ffLevel = 50;
@@ -1638,9 +1680,23 @@ var iterationConditions = [
                 html += "</td></tr>";
             }
             return html + "</tbody></table>";
-        }, overwrittenBy: [ ]
+        }, overwrittenBy: [ ], active: true,
+        passFunction: function(){
+            var output = [];
+            var o = Builder.getApproachesWithinDimensions();
+            for(var index in o){
+                var ff = parseInt((o[index].contained.length/approaches.length)*100);
+                if(ff >= 50){
+                    output.push({ dimension: index, value: true });
+                } else {
+                    output.push({ dimension: index, value: false });
+                }
+            }
+            return output;
+        }
     }),
-    new IterationCondition({ type: "subjective", title: "restricted comprehensibility", exec: function(){
+    new IterationCondition({ type: "subjective", title: "restricted comprehensibility",
+        exec: function(){
         var html = "<div class='cond-head";
         if(this.overwrittenBy.length > 0){
             html += " overwritten";
@@ -1652,7 +1708,10 @@ var iterationConditions = [
             html += "<tr><td>" + a.toString() + "</td><td>" + d.toString() + "</td></tr>";
         }
         return html + "</tbody></table>";
-    }, overwrittenBy: [ ] }),
+        }, overwrittenBy: [ ], active: true, passFunction: function(){
+            return [];
+        }
+    }),
     new IterationCondition({ type: "objective", title: "relevance", exec: function(){
         return "<div class='cond-head'><i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now</div>";
     }, overwrittenBy: [] }),
