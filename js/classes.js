@@ -15,6 +15,7 @@ class Approach {
         this.time = object.time;
         this.authors = object.authors;
         this.procedure = [];
+        this.firstIteration = object.firstIteration;
         if (object != null && typeof (object) != "undefined") {
             if (object.procedure != null && typeof (object.procedure) != "undefined") {
                 this.procedure = object.procedure;
@@ -217,6 +218,12 @@ class Attribute {
             "none": attributes.filter(x => x.isEmpiricalAssessable == null)
         };
     }
+    /**
+     * the method returns the attributes characteristics within a string
+     */
+    toString(){
+        return this.title;
+    }
 }
 /**
  * the class contains an attribute family
@@ -331,6 +338,34 @@ class Builder {
         $("#details > *").not(".fixed").remove();
     }
     /**
+     * the method returns a set of all dimensions and the approaches, that are represented and missed within
+     */
+    static getApproachesWithinDimensions(){
+        var temp = {};
+            for(var dim in dimensions){
+                var d = dimensions[dim].id;
+                var at = attributes.filter(x => x.dim == d).map(x => x.id);
+                temp[d] = [];
+                for(var i in at){
+                    var aps = approaches.filter(x => x.attributes.includes(at[i]));
+                    for(var index in aps){
+                        if(!temp[d].includes(aps[index].id)) temp[d].push(aps[index].id);
+                    }
+                }
+            }
+            var allApps = approaches.map(x => x.id);
+            var output = {};
+            for(var index in temp){
+                output[index] = { contained: temp[index] };
+                output[index].missed = allApps.filter(
+                    function(i){
+                        return temp[index].indexOf(i) < 0;
+                    }
+                );
+            }
+            return output;
+    }
+    /**
      * the method hides the details view window
      */
     static hideDetails() {
@@ -357,6 +392,16 @@ class Builder {
             var content = d.generateListView();
             $("#morph-box .body").append(content.html);
         }
+        for(var index in iterationSteps){
+            var isNotLast = true;
+            if(index == (iterationSteps.length-1)){
+                isNotLast = false;
+            }
+            var c = iterationSteps[index].generate(isNotLast);
+            $("#nick-container-content").append(c.html);
+            iterationSteps[index].addListeners(c.id);
+        }
+        $("#nick-container-content").append("<div style='min-width: 10px;'></div>");
         var s = AttributeGroup.getAllAttributesForAllGroups();
         var data = {
             labels: [], datasets: [], borderWidth: 1
@@ -396,6 +441,29 @@ class Builder {
                 });
             }
         }
+        var u = Attribute.sortAttributesByIsEmpiricalAssessable();
+        var data4 = {
+            labels: [], datasets: [], borderWidth: 1
+        };
+        var v = Dimension.getAllAttributesForAllDimensions();
+        v.sort((a, b) => (a.length > b.length) ? -1 : (a.length < b.length) ? 1 : 0);
+        for(var index in v){
+            var d = dimensions.find(x => x.id == index);
+            if(d != null && typeof(d) != "undefined"){
+                data4.datasets.push({
+                    label: d.title,
+                    data: [v[index].length],
+                    borderWidth: 2
+                });
+            }
+        }
+        var data3 = {
+            labels: ["theoretical measurable", "empirical measurable"], datasets: [{
+                backgroundColor: ["rgba(255, 174, 0, .5)", "rgba(255, 81, 0, .5)"],
+                borderColor: ["rgba(255, 174, 0, 1)", "rgba(255, 81, 0, 1)"],
+                data: [u["false"].length, u["true"].length]
+            }], borderWidth: 1
+        };
         $("#chart-cp-container-content").append("<canvas id='chart-cp-container-chart1' class='cp-chart'></canvas>");
         var chart2 = new Chart(document.getElementById("chart-cp-container-chart1"), {
             type: "bar",
@@ -423,11 +491,11 @@ class Builder {
         $("#chart-cp-container-content").append("<canvas id='chart-cp-container-chart2' class='cp-chart'></canvas>");
         var chart3 = new Chart(document.getElementById("chart-cp-container-chart2"), {
             type: "bar",
-            data: data2,
+            data: data4,
             options: {
                 title: {
                     display: true,
-                    text: "total numbers of approaches containing attributes of the group"
+                    text: "number of attributes within the dimensions"
                 },
                 legend: {
                     position: "bottom"
@@ -444,10 +512,72 @@ class Builder {
                 }
             }
         });
+        $("#chart-cp-container-content").append("<canvas id='chart-cp-container-chart4' class='cp-chart'></canvas>");
+        var chart5 = new Chart(document.getElementById("chart-cp-container-chart4"), {
+            type: "bar",
+            data: data2,
+            options: {
+                title: {
+                    display: true,
+                    text: "total numbers of approaches containing attributes of each group"
+                },
+                legend: {
+                    position: "bottom"
+                },
+                responsive: true,
+                scales: {
+                    min: 0,
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                }
+            }
+        });
+        $("#chart-cp-container-content").append("<canvas id='chart-cp-container-chart3' class='cp-chart'></canvas>");
+        var chart4 = new Chart(document.getElementById("chart-cp-container-chart3"), {
+            type: "pie",
+            data: data3,
+            options: {
+                title: {
+                    display: true,
+                    text: "shares of theoretical and empirical measurable quality characteristics"
+                },
+                legend: {
+                    position: "bottom"
+                },
+                plugins: {
+                    datalabels: {
+                        formatter: (value, ctx) => {
+                            let sum = 0;
+                            let dataArr = ctx.chart.data.datasets[0].data;
+                            dataArr.map(data => {
+                                sum += data;
+                            });
+                            let percentage = (value*100 / sum).toFixed(0)+"%";
+                            return percentage;
+                        },
+                        color: '#fff',
+                    }
+                }
+            }
+        });
         if (!$("#toggle-chart-cp").hasClass("click-event-added")) {
             $("#toggle-chart-cp").addClass("click-event-added");
             $("#toggle-chart-cp").click(function () {
                 $("#chart-cp-container").toggle();
+                $("#nick-container").hide();
+                $("#nick-detail-container").hide();
+            });
+        }
+        if (!$("#toggle-nick").hasClass("click-event-added")) {
+            $("#toggle-nick").addClass("click-event-added");
+            $("#toggle-nick").click(function () {
+                $("#nick-container").toggle();
+                $("#chart-cp-container").hide();
+                $("#nick-detail-container").hide();
             });
         }
         if (!$("#details-closer").hasClass("click-event-added")) {
@@ -509,6 +639,9 @@ class Builder {
                             $(".cell").show();
                             $("#details-footer").hide();
                             $("#overview-footer").show();
+                            $("#chart-cp-container").hide();
+                            $("#nick-container").hide();
+                            $("#nick-detail-container").hide();
                             break;
                         case "search":
                             break;
@@ -530,6 +663,7 @@ class Dimension {
         this.id = object.id;
         this.title = object.title;
         this.desc = object.desc;
+        this.metaDimension = object.metaDimension;
     }
     /**
      * the method generates the dimension's table row
@@ -553,10 +687,104 @@ class Dimension {
         return { html: html, id: this.id };
     }
     /**
+     * the method returns all attributes for all dimensions
+     */
+    static getAllAttributesForAllDimensions(){
+        var output = [];
+        for(var index in dimensions){
+            output[dimensions[index].id] = dimensions[index].getAttributes();
+        }
+        return output;
+    }
+    /**
+     * the method returns all attributes within the current dimension
+     */
+    getAttributes(){
+        return attributes.filter(x => x.dim == this.id).map(x => x.id);
+    }
+    /**
      * the method creates a representative string of the current instance
      */
     toString() {
         return this.title;
+    }
+}
+/**
+ * the iteration ending conditions
+ */
+class IterationCondition {
+    /**
+     * the constructor creates a new instance of an ending condition
+     */
+    constructor(object){
+        this.title = object.title;
+        this.type = object.type;
+        this.exec = object.exec;
+        this.overwrittenBy = object.overwrittenBy;
+    }
+    /**
+     * the method creates the string representation of the instance
+     */
+    toString(){
+        return this.title + " (" + this.type + ")";
+    }
+}
+/**
+ * an iteration step according to Nickerson's taxonomy development approach
+ */
+class IterationStep {
+    /**
+     * the constructor creates a new instance of an iteration step
+     */
+    constructor(object){
+        this.fnr = object.fnr;
+        this.source = object.source;
+        this.title = object.title;
+        this.desc = object.desc;
+        this.provider = object.provider;
+        this.contentProvider = object.contentProvider;
+        this.subtitle = object.subtitle;
+    }
+    /**
+     * the method adds the steps click listeners
+     */
+    addListeners(id){
+        var instance = this;
+        if(typeof(instance.contentProvider) != "undefined"){
+            if(!$("#" + id).hasClass("click-event-added")){
+                $("#" + id).addClass("click-event-added");
+                $("#" + id).click(function(){
+                    $("#nick-detail-container-content").empty();
+                    $("#nick-detail-container").show();
+                    $("#nick-container").hide();
+                    var content = instance.contentProvider();
+                    for(var index in content) $("#nick-detail-container-content").append("<div class='iteration-step-preview' style='overflow-y: auto;'>" + content[index] + "</div>");
+                });
+            }
+        }
+    }
+    /**
+     * the method generates the html code of the iteration step
+     */
+    generate(isNotLast){
+        var id = generateId();
+        var html = "<div id='" + id + "' class='iteration-step-preview'><div class='headline'><span class='number'>" + this.fnr + ".</span>" + this.title + "</div>";
+        if(this.subtitle != null && typeof(this.subtitle) != "undefined") html += "<div class='subtitle'>&bdquo;" + this.subtitle + "&ldquo;</div>";
+        if(isNotLast) html += "<i class='material-icons next-arrow'>arrow_forward</i>";
+        html += "<div class='desc'>" + this.desc + "</div><div class='option-content'>";
+        if(typeof(this.provider) != "undefined"){
+            var o = this.provider();
+            for(var index in o){
+                html += "<div class='option'>" + o[index].toString() + "</div>";
+            }
+        } else {
+            if(typeof(this.contentProvider) != "undefined"){
+                var content = this.contentProvider();
+                for(var index in content) html += content[index];
+            }
+        }
+        html += "</div></div>";
+        return { html: html, id: id };
     }
 }
 /**

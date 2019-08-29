@@ -15,7 +15,8 @@ var approaches = [
         ],
         procedure: [
 
-        ]
+        ],
+        firstIteration: true
     }),
     new Approach({
         id: 2,
@@ -28,7 +29,8 @@ var approaches = [
         authors: [
             "John Krogstie"
         ],
-        time: "1990s"
+        time: "1990s",
+        firstIteration: true
     }),
     new Approach({
         id: 3,
@@ -66,7 +68,8 @@ var approaches = [
                 desc: "The evaluation is based on the transformation rules (step 1), the ontological deficits of the reference model (step 2) and the normalized reference model (step 3). The reference model can be evaluated, using metrics or comparing it with another reference model of the domain modeled with a different modelling language."
             })
         ],
-        time: "1970s"
+        time: "1970s",
+        firstIteration: true
     }),
     new Approach({
         id: 4,
@@ -77,7 +80,8 @@ var approaches = [
             "https://www.wirtschaftsinformatik.uni-rostock.de/forschung/4em/home/die-methode/",
             "Enterprise Modeling: Tackling Business Challenges with the 4EM Method (Sandkuhl et al, 2014)",
             "Unternehmensmodellierung: Grundlagen, Methoden und Praktiken (Sandkuhl et al, 2013)"
-        ]
+        ],
+        firstIteration: true
     }),
     new Approach({
         id: 5,
@@ -98,7 +102,8 @@ var approaches = [
         attributes: [11, 16, 74, 139],
         sources: [
             "Quality in Business Process modelling (Krogstie, 2016)"
-        ]
+        ],
+        firstIteration: true
     }),
     new Approach({
         id: 7,
@@ -107,7 +112,8 @@ var approaches = [
         attributes: [15, 64, 74, 75, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113],
         sources: [
             
-        ]
+        ],
+        firstIteration: true
     }),
     new Approach({
         id: 8,
@@ -120,7 +126,8 @@ var approaches = [
         time: "2000s",
         authors: [
             "Patrick van Bommel"
-        ]
+        ],
+        firstIteration: true
     }),
     new Approach({
         id: 9,
@@ -132,7 +139,8 @@ var approaches = [
         attributes: [3, 17, 18, 19, 20, 21, 22, 63, 64, 74, 75],
         sources: [
             "Quality in Business Process modelling (Krogstie, 2016)"
-        ]
+        ],
+        firstIteration: false
     }),
     new Approach({
         id: 12,
@@ -141,7 +149,8 @@ var approaches = [
         attributes: [11, 74, 139],
         sources: [
             62
-        ]
+        ],
+        firstIteration: true
     }),
     new Approach({
         id: 13,
@@ -153,7 +162,8 @@ var approaches = [
         ],
         authors: [
             "Jörg Becker"
-        ]
+        ],
+        firstIteration: false
     }),
     new Approach({
         id: 14,
@@ -162,7 +172,8 @@ var approaches = [
         attributes: [140, 141, 142, 143, 144, 145, 146, 147],
         sources: [
             "https://link-springer-com.wwwdb.dbod.de/content/pdf/10.1007%2Fs11219-011-9136-9.pdf"
-        ]
+        ],
+        firstIteration: false
     }),
     new Approach({
         id: 15,
@@ -171,7 +182,8 @@ var approaches = [
         attributes: [35, 36],
         sources: [
             "https://link-springer-com.wwwdb.dbod.de/content/pdf/10.1007%2Fs11219-011-9136-9.pdf"
-        ]
+        ],
+        firstIteration: false
     }),
     new Approach({
         id: 16,
@@ -183,7 +195,8 @@ var approaches = [
         ],
         authors: [
             "Larsson", "Segerberg"
-        ]
+        ],
+        firstIteration: true
     }),
     new Approach({
         id: 17,
@@ -195,7 +208,8 @@ var approaches = [
         ],
         authors: [
             "Sandkuhl"
-        ]
+        ],
+        firstIteration: false
     }),
     new Approach({
         id: 18,
@@ -208,7 +222,8 @@ var approaches = [
         ],
         authors: [
             "Moreno-Montes", "Snoeck"
-        ]
+        ],
+        firstIteration: false
     }),
     new Approach({
         id: 19,
@@ -220,21 +235,51 @@ var approaches = [
         ],
         authors: [
 
-        ]
+        ],
+        firstIteration: false
     }),
     new Approach({
         id: 20,
         name: "FRISCO report",
         short: null,
-        attributes: [3, 6, 149],
+        attributes: [3, 6, 149, 150, 151, 152, 153, 154, 155, 156, 158, 159, 160, 161, 162, 163, 164, 165],
         sources: [
             "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998)"
         ],
         authors: [
             "Falkenberg", "Hesse", "Lindgreen"
         ],
-        time: "1990s"
+        time: "1990s",
+        firstIteration: false
+    }),
+    /*
+    new Approach({
+        id: 21,
+        name: "Multiple Modelling Quality Evaluation Framework",
+        short: "MMQEF",
+        attributes: [157],
+        sources: [
+            "A method to evaluate quality of modelling languages based on the Zachman reference taxonomy (Giraldo  et al, 2019)"
+        ],
+        authors: [
+            "Giraldo", "Espana", "Krogstie"
+        ],
+        time: "2010s"
+    }),
+    new Approach({
+        id: 22,
+        name: "Quality Evaluation Framework",
+        short: "QEF",
+        attributes: [157],
+        sources: [
+            "A method to evaluate quality of modelling languages based on the Zachman reference taxonomy (Giraldo  et al, 2019)"
+        ],
+        authors: [
+            "Giraldo", "Espana", "Krogstie"
+        ],
+        time: "2010s"
     })
+    */
 ];
 /**
  * the list contains all attributes of the evaluation approaches
@@ -268,9 +313,10 @@ var attributes = [
     }),
     new Attribute({
         id: 6,
-        title: "definitions of fundamental concepts of IS",
-        dim: 4,
-        group: 1
+        title: "global consistency",
+        desc: "This is in a way a self-evident principle. We assume that nobody will be interested in a framework of concepts consisting of various independent and incompatible portions. Thus, the aim is one coherent framework where every concept is related to every other one in a specific, well-established way, such that a consistent whole results.",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 10",
+        dim: 4
     }),
     new Attribute({
         id: 7,
@@ -1272,6 +1318,117 @@ var attributes = [
         title: "The (final) report is intended to provide a suitable conceptual framework, i.e., wherever possible, simple, clear and unambiguous definitions of, and a suitable terminology for the most fundamental concepts in the information system field, including the notions of information and communication, and of organisation and information system",
         source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 1",
         dim: 3
+    }),
+    new Attribute({
+        id: 150,
+        title: "expressiveness",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 158",
+        desc: "Expressiveness is a quality stating to what degree a given modelling language is capable of denoting the models of any number and kinds of application domains. ",
+        dim: 5
+    }),
+    new Attribute({
+        id: 151,
+        title: "arbitrariness",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 158",
+        desc: "Arbitrariness is a quality stating the degrees of freedom one has when modelling one and the same application domain. The more liberal a modelling language is, the more semantically equivalent models of one and the same domain can be found. If the modelling language allows one and only one model for each domain to be modelled, the arbitrariness is zero. Such a modelling language is called deterministic ([Fal93a, Fal93b]).",
+        dim: 5
+    }),
+    new Attribute({
+        id: 152,
+        title: "suitability",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 158",
+        desc: "Suitability is a quality stating to what degree a given modelling language is generally applicable, or specifically tailored for the particular task of modelling a specific kind of application domain.",
+        dim: 5
+    }),
+    new Attribute({
+        id: 153,
+        title: "generality",
+        desc: "We realise that there are many specialised subfields in our field. We do not attempt to consider those specialities in any detail. That is, our framework is meant to be as generic as possible, with respect to information systems. However, our framework must of course be specialisable and extensible wherever necessary, to cater for the various specialised subfields.",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 10",
+        dim: 4
+    }),
+    new Attribute({
+        id: 154,
+        title: "simple is beautiful",
+        desc: "The resulting framework should be as simple and straightforward as possible. If you, the reader, will find that our framework is indeed simple, maybe even too simple or trivial, we have achieved this goal. In other terms: Our field as a whole is broad and complex enough 'by nature', we should not add any unnecessary complexity to it.",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 10",
+        dim: 4
+    }),
+    new Attribute({
+        id: 155,
+        title: "anchoring information system concepts in related fields",
+        desc: "Within our framework, we try to use, as much as possible and wherever appropriate, wellestablished concept from other relevant disciplines. In this way, an isolated conceptual framework, being fairly incompatible with conceptual frameworks of related disciplines, may be avoided. In order to achieve this goal, information system concepts will be 'anchored' upon other relevant disciplines. These relevant related disciplines will be introduced and treated, but only to the absolutely necessary level of detail.",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 10",
+        dim: 4
+    }),
+    new Attribute({
+        id: 156,
+        title: "a conceptual foundation to be built upon",
+        desc: "For practical reasons, it is inevitable that our conceptual framework is limited in scope, that is, not all facets of the information system field can be treated. However, it must be possible that our framework serves as a conceptual foundation, as a kind of 'crystallisation kernel', from which one can build further, by introducing specialisations (guiding principle b) or other extensions.",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 10",
+        dim: 4
+    }),
+    new Attribute({
+        id: 157,
+        title: "Zachman Framework",
+        dim: 6,
+        source: "A method to evaluate quality of modelling languages based on the Zachman reference taxonomy (Giraldo  et al, 2019)"
+    }),
+    new Attribute({
+        id: 158,
+        title: "domain",
+        desc: "A domain comprises any 'part' or 'aspect' of the 'world' under consideration.",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 87",
+        dim: 11
+    }),
+    new Attribute({
+        id: 159,
+        title: "model",
+        desc: "A model is a purposely abstracted, clear, precise and unambiguous conception.",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 87",
+        dim: 11
+    }),
+    new Attribute({
+        id: 160,
+        title: "modeller",
+        desc: "A modeller is a human actor performing a modelling action.",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 87",
+        dim: 11
+    }),
+    new Attribute({
+        id: 161,
+        title: "intensional model",
+        desc: "An intensional model is that part of a model comprising the possibilities and necessities of a domain only, i.e. the types and rules.",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 87",
+        dim: 11
+    }),
+    new Attribute({
+        id: 162,
+        title: "extensional model",
+        desc: "An extensional model is that part of a model containing a specific population of the types in the corresponding intensional model, whereby this population must obey all rules determined in that intensional model.",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 87",
+        dim: 11
+    }),
+    new Attribute({
+        id: 163,
+        title: "meta-model",
+        desc: "A meta-model is a model of the conceptual foundation of a language, consisting of a set of basic concepts, and a set of rules determining the set of possible models denotable in that language.",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 87",
+        dim: 11
+    }),
+    new Attribute({
+        id: 164,
+        title: "system",
+        desc: "A system is a special model, whereby all the things contained in that model (all the system components) are transitively coherent, i.e. all of them are directly or indirectly related to each other form a coherent whole. A system is conceived as having assigned to it, as a whole, a specific characterisation (the so-called 'systemic properties'. ",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 87",
+        dim: 11
+    }),
+    new Attribute({
+        id: 165,
+        title: "type",
+        desc: "A type of things is a specific characterisation (e.g. a predicate) applying to all things of that type.",
+        source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 87",
+        dim: 11
     })
 ];
 /**
@@ -1320,50 +1477,260 @@ var attributeGroups = [
 var dimensions = [
     new Dimension({
         id: 1,
-        title: "origin domain"
+        title: "origin domain",
+        metaDimension: true
     }),
     new Dimension({
         id: 2,
-        title: "ontological aspect"
+        title: "ontological aspect",
+        metaDimension: false
     }),
     new Dimension({
         id: 3,
-        title: "key characteristics"
+        title: "key characteristics",
+        metaDimension: false
     }),
     new Dimension({
         id: 4,
-        title: "key aspects"
+        title: "key aspects",
+        metaDimension: true
     }),
     new Dimension({
         id: 5,
-        title: "quality characteristics/ guidelines"
+        title: "quality characteristics/ guidelines",
+        metaDimension: true
     }),
     new Dimension({
         id: 6,
-        title: "theoretical foundations"
+        title: "fundamentals",
+        metaDimension: true
     }),
     new Dimension({
         id: 7,
-        title: "embeddable methods/ frameworks"
+        title: "embeddable methods/ frameworks",
+        metaDimension: false
     }),
     new Dimension({
         id: 8,
-        title: "evaluated modelling methods/ languages"
+        title: "evaluated modelling methods/ languages",
+        metaDimension: true
     }),
     new Dimension({
         id: 9,
-        title: "subject of evaluation"
+        title: "subject of evaluation",
+        metaDimension: true
     }),
     new Dimension({
         id: 10,
-        title: "empirical evaluation"
-    }),
-    new Dimension({
-        id: 12,
-        title: "considered perspectives"
+        title: "empirical evaluation",
+        metaDimension: false
     }),
     new Dimension({
         id: 11,
-        title: "additional information"
+        title: "additional information",
+        metaDimension: false
+    }),
+    new Dimension({
+        id: 12,
+        title: "considered perspectives",
+        metaDimension: false
+    })
+]
+/**
+ * the taxonomy development approache's iteration conditions
+ */
+var iterationConditions = [
+    new IterationCondition({ type: "subjective", title: "parsimony",
+        exec: function(){
+            var html = "<div class='cond-head";
+            if(this.overwrittenBy.length > 0){
+                html += " overwritten";
+            }
+            html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span>";
+            if(this.overwrittenBy.length > 0){
+                html += "<span class='overwritten-ext'>overwritten by '" + this.overwrittenBy + "'</span>";
+            }
+            html += "</div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
+            var o = Builder.getApproachesWithinDimensions();
+            for(var index in o){
+                var d = o[index];
+                var dim = dimensions.filter(x => x.id == index)[0];
+                html += "<tr><td>" + dim.toString() + "</td><td>";
+                if(d.contained.length == 0){
+                    html += "<i class='material-icons' style='color: green;'>done</i>";
+                } else {
+                    html += "<i class='material-icons' style='color: red;'>clear</i>";
+                }
+                html += "</td></tr>";
+            }
+            return html + "</tbody></table>";
+        }, overwrittenBy: [ "restricted parsimony" ]
+    }),
+    new IterationCondition({ type: "subjective", title: "robustness", exec: function(){
+        var html = "<div class='cond-head";
+        if(this.overwrittenBy.length > 0){
+            html += " overwritten";
+        }
+        html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
+        for(var index in dimensions){
+            var dim = dimensions[index];
+            html += "<tr><td>" + dim.toString() + "</td><td><i class='material-icons' style='color: green;'>done</i></td></tr>";
+        }
+        return html + "</tbody></table>";
+    }, overwrittenBy: [] }),
+    new IterationCondition({ type: "subjective", title: "comprehensibility", exec: function(){
+        var html = "<div class='cond-head";
+        if(this.overwrittenBy.length > 0){
+            html += " overwritten";
+        }
+        html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
+        for(var index in attributes){
+            var a = attributes[index];
+            var d = dimensions.find(x => x.id == a.dim);
+            html += "<tr><td>" + a.toString() + "</td><td>" + d.toString() + "</td></tr>";
+        }
+        return html + "</tbody></table>";
+    }, overwrittenBy: [ "restricted comprehensibility" ] }),
+    new IterationCondition({ type: "subjective", title: "expandability", exec: function(){
+        return "<div class='cond-head'><i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now</div>";
+    }, overwrittenBy: [] }),
+    new IterationCondition({ type: "subjective", title: "explanatory characteristic", exec: function(){
+        var html = "<div class='cond-head";
+        if(this.overwrittenBy.length > 0){
+            html += " overwritten";
+        }
+        html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
+        for(var index in attributes){
+            var a = attributes[index];
+            html += "<tr><td>" + a.toString() + "</td><td>";
+            if(a.desc == null){
+                html += "<i class='material-icons' style='color: red;'>clear</i>";
+            } else {
+                html += "<i class='material-icons' style='color: green;'>done</i>";
+            }
+            html += "</td></tr>";
+        }
+        return html + "</tbody></table>";
+    }, overwrittenBy: [] }),
+    new IterationCondition({ type: "subjective", title: "restricted parsimony",
+        exec: function(){
+            var ffLevel = 50;
+            var html = "<div class='cond-head";
+            if(this.overwrittenBy.length > 0){
+                html += " overwritten";
+            }
+            html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + " (" + ffLevel + " %)</span>";
+            if(this.overwrittenBy.length > 0){
+                html += "<span class='overwritten-ext'>overwritten by '" + this.overwrittenBy + "'</span>";
+            }
+            html += "</div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
+            var o = Builder.getApproachesWithinDimensions();
+            for(var index in o){
+                var d = o[index];
+                var dim = dimensions.filter(x => x.id == index)[0];
+                html += "<tr><td>" + dim.toString() + "</td><td>";
+                var ff = parseInt((d.contained.length/dimensions.length)*100); 
+                if(ff >= 50){
+                    html += "<i class='material-icons' style='color: green;'>done</i>";
+                } else {
+                    html += "<i class='material-icons' style='color: red;'>clear</i>";
+                }
+                html += "</td></tr>";
+            }
+            return html + "</tbody></table>";
+        }, overwrittenBy: [ ]
+    }),
+    new IterationCondition({ type: "subjective", title: "restricted comprehensibility", exec: function(){
+        var html = "<div class='cond-head";
+        if(this.overwrittenBy.length > 0){
+            html += " overwritten";
+        }
+        html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
+        for(var index in attributes){
+            var a = attributes[index];
+            var d = dimensions.find(x => x.id == a.dim);
+            html += "<tr><td>" + a.toString() + "</td><td>" + d.toString() + "</td></tr>";
+        }
+        return html + "</tbody></table>";
+    }, overwrittenBy: [ ] }),
+    new IterationCondition({ type: "objective", title: "relevance", exec: function(){
+        return "<div class='cond-head'><i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now</div>";
+    }, overwrittenBy: [] }),
+    new IterationCondition({ type: "objective", title: "no new dimensions in last iteration", exec: function(){
+        return "<div class='cond-head'><i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now</div>";
+    }, overwrittenBy: [] }),
+    new IterationCondition({ type: "objective", title: "uniqueness", exec: function(){
+        return "<div class='cond-head'><i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now</div>";
+    }, overwrittenBy: [] })
+];
+/**
+ * the taxonomy iteration steps according to Nickerson
+ */
+var iterationSteps = [
+    new IterationStep({
+        fnr: 1,
+        subtitle: "meta-characteristic of a generic assessment approach",
+        title: "examine a meta characteristic of the domain",
+        source: "A method for taxonomy development and its application in information systems (Nickerson, 2013) p. 343",
+        desc: "The development of a taxonomy involves determining the characteristics of the objects of interest. The choice of the characteristics in a taxonomy is a central problem in taxonomy development. The characteristics could be based on a theory but in reality any ‘theory’ is often implicit (Aldenderfer & Blashfield, 1984). The researcher must avoid, however, the situation of ‘naı ¨ve empiricism’ in which a large number of related and unrelated characteristics are examined in the hope that a pattern will emerge (Aldenderfer & Blashfield, 1984, p. 20). To avoid this situation and provide a basis for identifying the characteristics of the taxonomy, we specify a meta-characteristic at the beginning of the taxonomy development process. The meta-characteristic is the most comprehensive characteristic that will serve as the basis for the choice of characteristics in the taxonomy. Each characteristic should be a logical consequence of the meta-characteristic. The choice of the meta-characteristic should be based on the purpose of the taxonomy. For example, assume that the researcher is trying to classify computer platforms (hardware and operating system) into a taxonomy. If the researcher’s purpose is to distinguish platforms based on processing power, then the meta-characteristic is the hardware and software characteristics, such as CPU power, memory, and operating system efficiency that impact measures of power such as speed and capacity. On the other hand, if the researcher’s purpose is to distinguish among computer platforms based on how users use them, then the meta-characteristic is the capability of the platform to interact with users, such as the maximum number of simultaneously running applications and the user interface. The purpose of the taxonomy should, in turn, be based on the expected use of the taxonomy and thus could be defined by the eventual users of the taxonomy. The design process could involve first identifying the user(s) of the taxonomy who then specify the projected use of the taxonomy, either explicitly or implicitly. Explicitly, the potential use of a taxonomy could be elicited from actual users using elicitation techniques similar to those employed in requirements analysis (see, e.g., Goguen & Linde, 1993). Alternatively, the researcher could project who the users could be and decide, based on experience, what use the users could make of the taxonomy. In the computer platform example in the previous paragraph, the researcher may wish to develop a taxonomy to be used by customers purchasing computers (the users of the taxonomy). If the researcher projects that these customers will be technology-savvy individuals interested in processing power, then the first taxonomy would be appropriate. On the other hand, if the researcher determines that the customers will be application-savvy individuals interested in how they can use the computer, then the second taxonomy would be appropriate. The choice of the meta-characteristic must be done carefully as it impacts critically the resulting taxonomy. Although ideally the meta-characteristic should be specified before determining the characteristics in the taxonomy our experience has been that the metacharacteristic sometimes does not become clear until part way through the taxonomy development process when we ask ourselves what the overall ‘theme’ is of the characteristics that we have proposed. We have found that this exercise often leads to a clear statement of the meta-characteristic and to eliminating some characteristics and identifying new characteristics. We see meta-characteristics appearing in research that develops taxonomies for various purposes, although they are not identified as such. For example, Nickerson (1997) develops a taxonomy of collaborative applications based on the meta-characteristic of communication among group members. Williams et al (2008) choose two meta-characteristics – design and objectives – in developing their taxonomy of digital services. Leem et al (2004) develop a classification scheme for mobile business models starting with the meta-characteristic of ‘business players’.",
+        provider: function(){
+            return dimensions.filter(x => x.metaDimension);
+        }
+    }),
+    new IterationStep({
+        fnr: 2,
+        title: "examine ending conditions",
+        subtitle: "objective and subjective conditions",
+        source: "A method for taxonomy development and its application in information systems (Nickerson, 2013) p. 343",
+        desc: "The method that we describe is iterative and thus must have conditions to determine when to terminate. These conditions are both objective and subjective. A fundamental objective ending condition is that the taxonomy must satisfy our definition of a taxonomy, specifically that it consists of dimensions each with mutually exclusive and collectively exhaustive characteristics. We have identified eight additional objective ending conditions listed in Table 2. Some of these conditions are adapted from Sowa & Zachman’s (1992) rules for their IS architecture framework. This list is not exhaustive and future research may identify additional objective ending conditions. An initial step for the researcher is to decide which of these or other objective conditions will be used to determine when to terminate the method. Subjective ending conditions also need to be examined. Previously, we noted that necessary conditions for a useful taxonomy are that it is concise, robust, comprehensive, extendible, and explanatory. These conditions are the minimal subjective ones that must be met for the method to terminate. Table 3 lists these subjective conditions with questions that the researcher could ask about each condition. The researcher can refer to the previous discussion of these conditions for further guidance. The researcher may wish to add more subjective conditions to these based on the researcher’s particular view. The researcher needs to be able to argue that all subjective conditions have been met before terminating the method. Depending on the chosen ending conditions, the method may generate somewhat different taxonomies, which is consistent with the design science philosophy of searching for useful, not necessarily optimal, solutions (Hevner et al, 2004). Our method can be extended to select a more useful taxonomy among multiple choices and even merge multiple taxonomies into one if needed. We leave this for future research.",
+        provider: function(){
+            return iterationConditions;
+        }
+    }),
+    new IterationStep({
+        fnr: 3,
+        title: "conceptualize characteristics and dimensions of objects",
+        subtitle: "all recognized dimensions",
+        source: "A method for taxonomy development and its application in information systems (Nickerson, 2013) p. 343",
+        provider: function(){
+            return dimensions;
+        }
+    }),
+    new IterationStep({
+        fnr: 4,
+        title: "collect objects",
+        subtitle: "all assessment approaches considered",
+        source: "A method for taxonomy development and its application in information systems (Nickerson, 2013) p. 343",
+        provider: function(){
+            return approaches;
+        }
+    }),
+    new IterationStep({
+        fnr: 5,
+        title: "build taxonomy",
+        source: "A method for taxonomy development and its application in information systems (Nickerson, 2013) p. 343",
+        contentProvider: function(){
+            var content = [];
+            for(var index in iterationConditions){
+                if(typeof(iterationConditions[index].exec) != "undefined"){
+                    content.push(iterationConditions[index].exec());
+                }
+            }
+            return content;
+        }
+    }),
+    new IterationStep({
+        fnr: 6,
+        title: "check ending conditions",
+        source: "",
+        provider: function(){
+            return [
+                {
+                    toString: function(){
+                        return "all requirements fullfilled<i class='material-icons' style='display: block; font-size: 40px; color: green;'>done</i>";
+                    }
+                }
+            ]
+        }
     })
 ]
