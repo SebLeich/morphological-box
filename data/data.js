@@ -111,7 +111,7 @@ var approaches = [
         short: null,
         attributes: [15, 64, 74, 75, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113],
         sources: [
-            
+
         ],
         firstIteration: true
     }),
@@ -158,7 +158,7 @@ var approaches = [
         short: "GOM II",
         attributes: [10, 65, 76, 126, 127, 128, 129, 130, 131, 132],
         sources: [
-            
+
         ],
         authors: [
             "Jörg Becker"
@@ -251,35 +251,7 @@ var approaches = [
         ],
         time: "1990s",
         firstIteration: false
-    }),
-    /*
-    new Approach({
-        id: 21,
-        name: "Multiple Modelling Quality Evaluation Framework",
-        short: "MMQEF",
-        attributes: [157],
-        sources: [
-            "A method to evaluate quality of modelling languages based on the Zachman reference taxonomy (Giraldo  et al, 2019)"
-        ],
-        authors: [
-            "Giraldo", "Espana", "Krogstie"
-        ],
-        time: "2010s"
-    }),
-    new Approach({
-        id: 22,
-        name: "Quality Evaluation Framework",
-        short: "QEF",
-        attributes: [157],
-        sources: [
-            "A method to evaluate quality of modelling languages based on the Zachman reference taxonomy (Giraldo  et al, 2019)"
-        ],
-        authors: [
-            "Giraldo", "Espana", "Krogstie"
-        ],
-        time: "2010s"
     })
-    */
 ];
 /**
  * the list contains all attributes of the evaluation approaches
@@ -758,7 +730,7 @@ var attributes = [
         title: "dataflow diagrams",
         source: "Ontological Evaluation of the UML Using the Bunge–Wand–Weber Model (Opdahl & Henderson-Sellers, 2002)",
         dim: 8
-    }),    
+    }),
     new Attribute({
         id: 69,
         title: "successfully used, i.e. in SAP (EPK)",
@@ -1542,23 +1514,30 @@ var dimensions = [
  * the taxonomy development approache's iteration conditions
  */
 var iterationConditions = [
-    new IterationCondition({ type: "subjective", title: "parsimony",
-        exec: function(){
+    new IterationCondition({
+        type: "subjective", title: "parsimony",
+        exec: function () {
             var html = "<div class='cond-head";
-            if(this.overwrittenBy.length > 0){
+            if (this.overwrittenBy.length > 0) {
                 html += " overwritten";
             }
             html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span>";
-            if(this.overwrittenBy.length > 0){
+            if (this.overwrittenBy.length > 0) {
                 html += "<span class='overwritten-ext'>overwritten by '" + this.overwrittenBy + "'</span>";
             }
-            html += "</div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
+            html += "<button class='btn' data-ic='" + this.title + "'>";
+            if(this.active){
+                html += "disable";
+            } else {
+                html += "enable";
+            }
+            html += "</button></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
             var o = Builder.getApproachesWithinDimensions();
-            for(var index in o){
+            for (var index in o) {
                 var d = o[index];
                 var dim = dimensions.filter(x => x.id == index)[0];
                 html += "<tr><td>" + dim.toString() + "</td><td>";
-                if(d.missed.length == 0){
+                if (d.missed.length == 0) {
                     html += "<i class='material-icons' style='color: green;'>done</i>";
                 } else {
                     html += "<i class='material-icons' style='color: red;'>clear</i>";
@@ -1566,12 +1545,12 @@ var iterationConditions = [
                 html += "</td></tr>";
             }
             return html + "</tbody></table>";
-        }, overwrittenBy: [ "restricted parsimony" ], active: true,
-        passFunction: function(){
+        }, overwrittenBy: ["restricted parsimony"], active: true,
+        passFunction: function () {
             var output = [];
             var o = Builder.getApproachesWithinDimensions();
-            for(var index in o){
-                if(o[index].missed.length == 0){
+            for (var index in o) {
+                if (o[index].missed.length == 0) {
                     output.push({ dimension: index, value: true });
                 } else {
                     output.push({ dimension: index, value: false });
@@ -1580,59 +1559,118 @@ var iterationConditions = [
             return output;
         }
     }),
-    new IterationCondition({ type: "subjective", title: "robustness",
-        exec: function(){
+    new IterationCondition({
+        type: "subjective", title: "robustness",
+        exec: function () {
             var html = "<div class='cond-head";
-            if(this.overwrittenBy.length > 0){
+            if (this.overwrittenBy.length > 0) {
                 html += " overwritten";
             }
-            html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
-            for(var index in dimensions){
+            html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span>";
+            html += "<button class='btn' data-ic='" + this.title + "'>";
+            if(this.active){
+                html += "disable";
+            } else {
+                html += "enable";
+            }
+            html += "</button></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
+            for (var index in dimensions) {
                 var dim = dimensions[index];
                 html += "<tr><td>" + dim.toString() + "</td><td><i class='material-icons' style='color: green;'>done</i></td></tr>";
             }
             return html + "</tbody></table>";
-        }, overwrittenBy: [],
-        passFunction: function(){
+        }, overwrittenBy: [], active: true,
+        passFunction: function () {
             return [];
         }
     }),
-    new IterationCondition({ type: "subjective", title: "comprehensibility",
-        exec: function(){
+    new IterationCondition({
+        type: "subjective", title: "comprehensibility",
+        exec: function () {
+            var dimIds = dimensions.map(x => x.id);
+            var o = attributes.filter(x => x.dim == null || typeof (x.dim) == "undefined" || dimIds.indexOf(x.dim) < 0).map(x => x.id);
             var html = "<div class='cond-head";
-            if(this.overwrittenBy.length > 0){
+            if (this.overwrittenBy.length > 0) {
+                html += " overwritten";
+            }
+            html += "'>";
+            if (o.length == 0) {
+                html += "<i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now";
+                html += "<button class='btn' data-ic='" + this.title + "'>";
+                if(this.active){
+                    html += "disable";
+                } else {
+                    html += "enable";
+                }
+                html += "</button></div>";
+                return html;
+            } else {
+                html += "<i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span>";
+                html += "<button class='btn' data-ic='" + this.title + "'>";
+                if(this.active){
+                    html += "disable";
+                } else {
+                    html += "enable";
+                }
+                html += "</button></div><table class='cond-table'><thead><tr><td colspan='2'>violated attributes (" + o.length + ")</td></tr></thead><tbody>";
+                for (var i in o) {
+                    var a = attributes.find(x => x.id == o[i]);
+                    if (typeof (a) != "undefined") {
+                        html += "<tr><td>" + a.toString() + "</td><td><i class='material-icons' style='color: red;'>clear</i></td></tr>";
+                    } else {
+                        html += "<tr><td>unknown attribute</td><td><i class='material-icons' style='color: red;'>clear</i></td></tr>";
+                    }
+                }
+                html += "</tbody></table>";
+            }
+            return html + "</div>";
+        }, overwrittenBy: [], active: true, passFunction: function () {
+            var output = [];
+            var dimIds = dimensions.map(x => x.id);
+            var o = attributes.filter(x => x.dim == null || typeof (x.dim) == "undefined" || dimIds.indexOf(x.dim) < 0).map(x => x.id);
+            for (var index in attributes) {
+                var a = attributes[index];
+                if (o.indexOf(a.id) > -1) {
+                    output.push({ attribute: a.id, value: false });
+                } else {
+                    output.push({ attribute: a.id, value: true });
+                }
+            }
+            return output;
+        }
+    }),
+    new IterationCondition({
+        type: "subjective", title: "expandability", exec: function () {
+            var html = "<div class='cond-head'><i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now";
+            html += "<button class='btn' data-ic='" + this.title + "'>";
+            if(this.active){
+                html += "disable";
+            } else {
+                html += "enable";
+            }
+            html += "</button></div>";
+            return html;
+        }, overwrittenBy: [], active: true
+    }),
+    new IterationCondition({
+        type: "subjective", title: "explanatory characteristic",
+        exec: function () {
+            var html = "<div class='cond-head";
+            if (this.overwrittenBy.length > 0) {
                 html += " overwritten";
             }
             html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span>";
-            if(this.overwrittenBy.length > 0){
-                html += "<span class='overwritten-ext'>overwritten by '" + this.overwrittenBy + "'</span>";
+            html += "<button class='btn' data-ic='" + this.title + "'>";
+            if(this.active){
+                html += "disable";
+            } else {
+                html += "enable";
             }
-            html += "</div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
-            for(var index in attributes){
-                var a = attributes[index];
-                var d = dimensions.find(x => x.id == a.dim);
-                html += "<tr><td>" + a.toString() + "</td><td>" + d.toString() + "</td></tr>";
-            }
-            return html + "</tbody></table>";
-        }, overwrittenBy: [ "restricted comprehensibility" ], active: true,
-        passFunction: function(){
-            return [];
-        }
-    }),
-    new IterationCondition({ type: "subjective", title: "expandability", exec: function(){
-        return "<div class='cond-head'><i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now</div>";
-    }, overwrittenBy: [] }),
-    new IterationCondition({ type: "subjective", title: "explanatory characteristic",
-        exec: function(){
-            var html = "<div class='cond-head";
-            if(this.overwrittenBy.length > 0){
-                html += " overwritten";
-            }
-            html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
-            for(var index in attributes){
+            html += "</button></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
+            for (var index in attributes) {
                 var a = attributes[index];
                 html += "<tr><td>" + a.toString() + "</td><td>";
-                if(a.desc == null){
+                if (a.desc == null) {
                     html += "<i class='material-icons' style='color: red;'>clear</i>";
                 } else {
                     html += "<i class='material-icons' style='color: green;'>done</i>";
@@ -1641,11 +1679,11 @@ var iterationConditions = [
             }
             return html + "</tbody></table>";
         }, overwrittenBy: [], active: true,
-        passFunction: function(){
+        passFunction: function () {
             var output = [];
-            for(var index in attributes){
+            for (var index in attributes) {
                 var a = attributes[index];
-                if(a.desc == null){
+                if (a.desc == null) {
                     output.push({ value: false, attribute: a.id });
                 } else {
                     output.push({ value: true, attribute: a.id });
@@ -1654,39 +1692,46 @@ var iterationConditions = [
             return output;
         }
     }),
-    new IterationCondition({ type: "subjective", title: "restricted parsimony",
-        exec: function(){
-            var ffLevel = 50;
+    new IterationCondition({
+        type: "subjective", title: "restricted parsimony",
+        exec: function () {
+            var ffLevel = 40;
             var html = "<div class='cond-head";
-            if(this.overwrittenBy.length > 0){
+            if (this.overwrittenBy.length > 0) {
                 html += " overwritten";
             }
             html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + " (" + ffLevel + " %)</span>";
-            if(this.overwrittenBy.length > 0){
+            if (this.overwrittenBy.length > 0) {
                 html += "<span class='overwritten-ext'>overwritten by '" + this.overwrittenBy + "'</span>";
+            }            
+            html += "<button class='btn' data-ic='" + this.title + "'>";
+            if(this.active){
+                html += "disable";
+            } else {
+                html += "enable";
             }
-            html += "</div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
+            html += "</button></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td><td></td></tr></thead><tbody>";
             var o = Builder.getApproachesWithinDimensions();
-            for(var index in o){
+            for (var index in o) {
                 var d = o[index];
                 var dim = dimensions.filter(x => x.id == index)[0];
                 html += "<tr><td>" + dim.toString() + "</td><td>";
-                var ff = parseInt((d.contained.length/dimensions.length)*100); 
-                if(ff >= 50){
+                var ff = parseInt((d.contained.length / nickIt.unrestrictedApproaches.length) * 100);
+                if (ff >= ffLevel) {
                     html += "<i class='material-icons' style='color: green;'>done</i>";
                 } else {
                     html += "<i class='material-icons' style='color: red;'>clear</i>";
                 }
-                html += "</td></tr>";
+                html += "</td><td>" + ff + " %</td></tr>";
             }
             return html + "</tbody></table>";
-        }, overwrittenBy: [ ], active: true,
-        passFunction: function(){
+        }, overwrittenBy: [], active: true,
+        passFunction: function () {
             var output = [];
             var o = Builder.getApproachesWithinDimensions();
-            for(var index in o){
-                var ff = parseInt((o[index].contained.length/approaches.length)*100);
-                if(ff >= 50){
+            for (var index in o) {
+                var ff = parseInt((o[index].contained.length / nickIt.unrestrictedApproaches.length) * 100);
+                if (ff >= 40) {
                     output.push({ dimension: index, value: true });
                 } else {
                     output.push({ dimension: index, value: false });
@@ -1695,32 +1740,135 @@ var iterationConditions = [
             return output;
         }
     }),
-    new IterationCondition({ type: "subjective", title: "restricted comprehensibility",
-        exec: function(){
-        var html = "<div class='cond-head";
-        if(this.overwrittenBy.length > 0){
-            html += " overwritten";
-        }
-        html += "'><i class='material-icons'>arrow_right</i><span class='title'>" + this.title + "</span></div><table class='cond-table'><thead><tr><td>dimension</td><td>is fulfilled</td></tr></thead><tbody>";
-        for(var index in attributes){
-            var a = attributes[index];
-            var d = dimensions.find(x => x.id == a.dim);
-            html += "<tr><td>" + a.toString() + "</td><td>" + d.toString() + "</td></tr>";
-        }
-        return html + "</tbody></table>";
-        }, overwrittenBy: [ ], active: true, passFunction: function(){
-            return [];
+    new IterationCondition({
+        type: "objective", title: "relevance", exec: function () {
+            return "<div class='cond-head'><i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now</div>";
+        }, overwrittenBy: []
+    }),
+    new IterationCondition({
+        type: "objective", title: "no new dimensions in last iteration",
+        exec: function () {
+            return "<div class='cond-head'><i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now</div>";
+        },
+        overwrittenBy: []
+    }),
+    new IterationCondition({
+        type: "objective", title: "uniqueness",
+        exec: function () {
+            var simLevel = 80;
+            var o = this.passFunction().filter(x => x.value === false);
+            var html = "<div class='cond-head";
+            if (this.overwrittenBy.length > 0) {
+                html += " overwritten";
+            }
+            html += "'>";
+            if (o.length == 0) {
+                html += "<i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now";
+                html += "<button class='btn' data-ic='" + this.title + "'>";
+                if(this.active){
+                    html += "disable";
+                } else {
+                    html += "enable";
+                }
+                html += "</button></div>";
+                return html;
+            } else {
+                html += "<i class='material-icons'>arrow_right</i><span class='title'>" + this.title + " (" + simLevel + " %)</span>";
+                html += "<button class='btn' data-ic='" + this.title + "'>";
+                if(this.active){
+                    html += "disable";
+                } else {
+                    html += "enable";
+                }
+                html += "</button></div><table class='cond-table'><thead><tr><td colspan='2'>violated dimensions (" + o.length + ")</td></tr></thead><tbody>";
+                for (var i in o) {
+                    var d = dimensions.find(x => x.id == o[i].dimension);
+                    html += "<tr><td>" + d.toString() + "</td><td><i class='material-icons' style='color: red;'>clear</i></td></tr>";
+                }
+                html += "</tbody></table>";
+            }
+            return html;
+        }, overwrittenBy: [], active: true, passFunction: function () {
+            var simLevel = 80;
+            var output = [];
+            for (var index in dimensions) {
+                var d = dimensions[index];
+                if (output.filter(x => x.dimension == d.id).length == 0) {
+                    output.push({ dimension: d.id, value: true });
+                }
+                var err = dimensions.filter(x => x.id != d.id && (compareTwoStrings(d.toString(), x.toString()) * 100) > simLevel).map(x => x.id);
+                for (var index in err) {
+                    output.find(x => x.dimension == d.id).value = false;
+                    if (output.filter(x => x.dimension == err[index]).length == 0) {
+                        output.push({ dimension: err[index], value: false });
+                    } else {
+                        output.find(x => x.dimension == err[index]).value = false;
+                    }
+                }
+            }
+            return output;
         }
     }),
-    new IterationCondition({ type: "objective", title: "relevance", exec: function(){
-        return "<div class='cond-head'><i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now</div>";
-    }, overwrittenBy: [] }),
-    new IterationCondition({ type: "objective", title: "no new dimensions in last iteration", exec: function(){
-        return "<div class='cond-head'><i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now</div>";
-    }, overwrittenBy: [] }),
-    new IterationCondition({ type: "objective", title: "uniqueness", exec: function(){
-        return "<div class='cond-head'><i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now</div>";
-    }, overwrittenBy: [] })
+    new IterationCondition({
+        type: "objective", title: "well-founded",
+        exec: function () {
+            var simLevel = 40;
+            var o = this.passFunction();
+            var apps = [];
+            for(var index in o){
+                if(o[index].value == false) apps.push(o[index].approach);
+            }
+            var html = "<div class='cond-head";
+            if (this.overwrittenBy.length > 0) {
+                html += " overwritten";
+            }
+            html += "'>";
+            if (apps.length == 0) {
+                html += "<i class='material-icons' style='color: green; font-size: 15px; padding: 0px 5px;'>done</i>" + this.title + " is not violated now";
+                html += "<button class='btn' data-ic='" + this.title + "'>";
+                if(this.active){
+                    html += "disable";
+                } else {
+                    html += "enable";
+                }
+                html += "</button></div>";
+                return html;
+            } else {
+                html += "<i class='material-icons'>arrow_right</i><span class='title'>" + this.title + " (" + simLevel + " %)</span>";
+                html += "<button class='btn' data-ic='" + this.title + "'>";
+                if(this.active){
+                    html += "disable";
+                } else {
+                    html += "enable";
+                }
+                html += "</button></div><table class='cond-table'><thead><tr><td colspan='2'>violated approaches (" + apps.length + ")</td></tr></thead><tbody>";
+                for (var i in apps) {
+                    var a = approaches.find(x => x.id == apps[i]);
+                    html += "<tr><td>" + a.toString() + "</td><td><i class='material-icons' style='color: red;'>clear</i></td></tr>";
+                }
+                html += "</tbody></table>";
+            }
+            return html;
+        }, overwrittenBy: [], active: true, passFunction: function () {
+            var simLevel = 40;
+            var output = [];
+            var o = Builder.getApproachesWithinDimensions();
+            for(var index in nickIt.unrestrictedApproaches){
+                var a = approaches.find(x => x.id == nickIt.unrestrictedApproaches[index]);
+                var c = 0;
+                for(var i in o){
+                    if(o[i].contained.includes(a.id)) c++;
+                }
+                var ff = parseInt( (c / nickIt.unrestrictedDimensions.length) * 100 );
+                if(ff < simLevel){
+                    output.push({ approach: a.id, value: false });
+                } else {
+                    output.push({ approach: a.id, value: true });
+                }
+            }
+            return output;
+        }
+    })
 ];
 /**
  * the taxonomy iteration steps according to Nickerson
@@ -1732,7 +1880,7 @@ var iterationSteps = [
         title: "examine a meta characteristic of the domain",
         source: "A method for taxonomy development and its application in information systems (Nickerson, 2013) p. 343",
         desc: "The development of a taxonomy involves determining the characteristics of the objects of interest. The choice of the characteristics in a taxonomy is a central problem in taxonomy development. The characteristics could be based on a theory but in reality any ‘theory’ is often implicit (Aldenderfer & Blashfield, 1984). The researcher must avoid, however, the situation of ‘naı ¨ve empiricism’ in which a large number of related and unrelated characteristics are examined in the hope that a pattern will emerge (Aldenderfer & Blashfield, 1984, p. 20). To avoid this situation and provide a basis for identifying the characteristics of the taxonomy, we specify a meta-characteristic at the beginning of the taxonomy development process. The meta-characteristic is the most comprehensive characteristic that will serve as the basis for the choice of characteristics in the taxonomy. Each characteristic should be a logical consequence of the meta-characteristic. The choice of the meta-characteristic should be based on the purpose of the taxonomy. For example, assume that the researcher is trying to classify computer platforms (hardware and operating system) into a taxonomy. If the researcher’s purpose is to distinguish platforms based on processing power, then the meta-characteristic is the hardware and software characteristics, such as CPU power, memory, and operating system efficiency that impact measures of power such as speed and capacity. On the other hand, if the researcher’s purpose is to distinguish among computer platforms based on how users use them, then the meta-characteristic is the capability of the platform to interact with users, such as the maximum number of simultaneously running applications and the user interface. The purpose of the taxonomy should, in turn, be based on the expected use of the taxonomy and thus could be defined by the eventual users of the taxonomy. The design process could involve first identifying the user(s) of the taxonomy who then specify the projected use of the taxonomy, either explicitly or implicitly. Explicitly, the potential use of a taxonomy could be elicited from actual users using elicitation techniques similar to those employed in requirements analysis (see, e.g., Goguen & Linde, 1993). Alternatively, the researcher could project who the users could be and decide, based on experience, what use the users could make of the taxonomy. In the computer platform example in the previous paragraph, the researcher may wish to develop a taxonomy to be used by customers purchasing computers (the users of the taxonomy). If the researcher projects that these customers will be technology-savvy individuals interested in processing power, then the first taxonomy would be appropriate. On the other hand, if the researcher determines that the customers will be application-savvy individuals interested in how they can use the computer, then the second taxonomy would be appropriate. The choice of the meta-characteristic must be done carefully as it impacts critically the resulting taxonomy. Although ideally the meta-characteristic should be specified before determining the characteristics in the taxonomy our experience has been that the metacharacteristic sometimes does not become clear until part way through the taxonomy development process when we ask ourselves what the overall ‘theme’ is of the characteristics that we have proposed. We have found that this exercise often leads to a clear statement of the meta-characteristic and to eliminating some characteristics and identifying new characteristics. We see meta-characteristics appearing in research that develops taxonomies for various purposes, although they are not identified as such. For example, Nickerson (1997) develops a taxonomy of collaborative applications based on the meta-characteristic of communication among group members. Williams et al (2008) choose two meta-characteristics – design and objectives – in developing their taxonomy of digital services. Leem et al (2004) develop a classification scheme for mobile business models starting with the meta-characteristic of ‘business players’.",
-        provider: function(){
+        provider: function () {
             return dimensions.filter(x => x.metaDimension);
         }
     }),
@@ -1742,7 +1890,7 @@ var iterationSteps = [
         subtitle: "objective and subjective conditions",
         source: "A method for taxonomy development and its application in information systems (Nickerson, 2013) p. 343",
         desc: "The method that we describe is iterative and thus must have conditions to determine when to terminate. These conditions are both objective and subjective. A fundamental objective ending condition is that the taxonomy must satisfy our definition of a taxonomy, specifically that it consists of dimensions each with mutually exclusive and collectively exhaustive characteristics. We have identified eight additional objective ending conditions listed in Table 2. Some of these conditions are adapted from Sowa & Zachman’s (1992) rules for their IS architecture framework. This list is not exhaustive and future research may identify additional objective ending conditions. An initial step for the researcher is to decide which of these or other objective conditions will be used to determine when to terminate the method. Subjective ending conditions also need to be examined. Previously, we noted that necessary conditions for a useful taxonomy are that it is concise, robust, comprehensive, extendible, and explanatory. These conditions are the minimal subjective ones that must be met for the method to terminate. Table 3 lists these subjective conditions with questions that the researcher could ask about each condition. The researcher can refer to the previous discussion of these conditions for further guidance. The researcher may wish to add more subjective conditions to these based on the researcher’s particular view. The researcher needs to be able to argue that all subjective conditions have been met before terminating the method. Depending on the chosen ending conditions, the method may generate somewhat different taxonomies, which is consistent with the design science philosophy of searching for useful, not necessarily optimal, solutions (Hevner et al, 2004). Our method can be extended to select a more useful taxonomy among multiple choices and even merge multiple taxonomies into one if needed. We leave this for future research.",
-        provider: function(){
+        provider: function () {
             return iterationConditions;
         }
     }),
@@ -1751,7 +1899,7 @@ var iterationSteps = [
         title: "conceptualize characteristics and dimensions of objects",
         subtitle: "all recognized dimensions",
         source: "A method for taxonomy development and its application in information systems (Nickerson, 2013) p. 343",
-        provider: function(){
+        provider: function () {
             return dimensions;
         }
     }),
@@ -1760,7 +1908,7 @@ var iterationSteps = [
         title: "collect objects",
         subtitle: "all assessment approaches considered",
         source: "A method for taxonomy development and its application in information systems (Nickerson, 2013) p. 343",
-        provider: function(){
+        provider: function () {
             return approaches;
         }
     }),
@@ -1768,10 +1916,10 @@ var iterationSteps = [
         fnr: 5,
         title: "build taxonomy",
         source: "A method for taxonomy development and its application in information systems (Nickerson, 2013) p. 343",
-        contentProvider: function(){
+        contentProvider: function () {
             var content = [];
-            for(var index in iterationConditions){
-                if(typeof(iterationConditions[index].exec) != "undefined"){
+            for (var index in iterationConditions) {
+                if (typeof (iterationConditions[index].exec) != "undefined") {
                     content.push(iterationConditions[index].exec());
                 }
             }
@@ -1782,10 +1930,10 @@ var iterationSteps = [
         fnr: 6,
         title: "check ending conditions",
         source: "",
-        provider: function(){
+        provider: function () {
             return [
                 {
-                    toString: function(){
+                    toString: function () {
                         return "all requirements fullfilled<i class='material-icons' style='display: block; font-size: 40px; color: green;'>done</i>";
                     }
                 }

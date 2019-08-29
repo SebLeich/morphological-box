@@ -7,6 +7,7 @@
     <script src="data/data.js"></script>
     <script src="lib/Chart.min.js"></script>
     <script src="lib/chartjs-plugin-datalabels.min.js"></script>
+    <script src="lib/scomp.js"></script>
     <link rel="stylesheet" href="lib/material-icons-master/iconfont/material-icons.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap" rel="stylesheet">
@@ -46,15 +47,18 @@
     </div>
     <div id="overview-footer" class="footer">
         <div class="footer-item dimensions">
-            <span class="text"></span>
+            <span class="text c"></span>/
+            <span class="text small"></span>
             dimensions
         </div>
         <div class="footer-item approaches">
-            <span class="text"></span>
+            <span class="text c"></span>/
+            <span class="text small"></span>
             approaches
         </div>
         <div class="footer-item properties">
-            <span class="text"></span>
+            <span class="text c"></span>/
+            <span class="text small"></span>
             properties
         </div>
         <div class="footer-chart">
@@ -84,6 +88,7 @@
     <datalist id="approaches"></datalist>
 </body>
 <script>
+    let nickIt = new NickersonIteration();
     $(window).ready(function () {
         Builder.start();
     });

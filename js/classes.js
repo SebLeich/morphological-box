@@ -369,7 +369,8 @@ class Builder {
      * the method returns all unrestricted attributes
      */
     static getUnrestrictedAttributes(){
-        var output = attributes.map(x => x.id);
+        var removed = 0;
+        var output = nickIt.unrestrictedAttributes;
         for(var index in iterationConditions){
             var c = iterationConditions[index];
             if(c.passFunction != null && typeof(c.passFunction) != "undefined" && c.active === true && c.overwrittenBy.length == 0){
@@ -377,18 +378,45 @@ class Builder {
                 for(var i in o){
                     if(o[i].value === false && typeof(o[i].attribute) != "undefined"){
                         var f = output.indexOf(parseInt(o[i].attribute));
-                        if(f > -1) output.splice(f, 1);
+                        if(f > -1){
+                            output.splice(f, 1);
+                            removed++;
+                        }
                     }
                 }
             }
         }
-        return output;
+        return { value: output, count: removed };
+    }
+    /**
+     * the method returns all unrestricted attributes
+     */
+    static getUnrestrictedApproaches(){
+        var removed = 0;
+        var output = nickIt.unrestrictedApproaches;
+        for(var index in iterationConditions){
+            var c = iterationConditions[index];
+            if(c.passFunction != null && typeof(c.passFunction) != "undefined" && c.active === true && c.overwrittenBy.length == 0){
+                var o = c.passFunction();
+                for(var i in o){
+                    if(o[i].value === false && typeof(o[i].approach) != "undefined"){
+                        var f = output.indexOf(parseInt(o[i].approach));
+                        if(f > -1){
+                            output.splice(f, 1);
+                            removed++;
+                        }
+                    }
+                }
+            }
+        }
+        return { value: output, count: removed };
     }
     /**
      * the method returns all unrestricted dimensions
      */
     static getUnrestrictedDimensions(){
-        var output = dimensions.map(x => x.id);
+        var removed = 0;
+        var output = nickIt.unrestrictedDimensions;
         for(var index in iterationConditions){
             var c = iterationConditions[index];
             if(c.passFunction != null && typeof(c.passFunction) != "undefined" && c.active == true && c.overwrittenBy.length == 0){
@@ -396,12 +424,16 @@ class Builder {
                 for(var i in o){
                     if(o[i].value == false && typeof(o[i].dimension) != "undefined"){
                         var f = output.indexOf(parseInt(o[i].dimension));
-                        if(f > -1) output.splice(f, 1);
+                        if(f > -1){
+                            output.splice(f, 1);
+                            removed++;
+                        }
                     }
                 }
             }
         }
-        return output;
+        console.log(output);
+        return { value: output, count: removed };
     }
     /**
      * the method hides the details view window
@@ -419,21 +451,11 @@ class Builder {
      * the method starts the application's runtime
      */
     static start() {
-        $(".footer-item.dimensions .text").text(dimensions.length);
-        $(".footer-item.approaches .text").text(approaches.length);
-        $(".footer-item.properties .text").text(attributes.length);
-        var uRD = Builder.getUnrestrictedDimensions();
-        var uRA = Builder.getUnrestrictedAttributes();
-        for (var index in approaches) {
-            $("#approaches").append(approaches[index].toDatalistOption());
-        }
-        for (var index in dimensions) {
-            var d = dimensions[index];
-            if(uRD.includes(d.id)){
-                var content = d.generateListView(uRA);
-                $("#morph-box .body").append(content.html);
-            }
-        }
+        nickIt.start();
+        nickIt.render();
+        $(".footer-item.dimensions .text.small").text(dimensions.length);
+        $(".footer-item.approaches .text.small").text(approaches.length);
+        $(".footer-item.properties .text.small").text(attributes.length);
         for(var index in iterationSteps){
             var isNotLast = true;
             if(index == (iterationSteps.length-1)){
@@ -804,6 +826,24 @@ class IterationStep {
                     var content = instance.contentProvider();
                     for(var index in content) $("#nick-detail-container-content").append("<div class='iteration-step-preview' style='overflow-y: auto;'>" + content[index] + "</div>");
                     $("#nick-detail-container-content").append("<div style='min-width: 10px;'></div>");
+                    $("#nick-detail-container-content .btn").each(function(){
+                        if(!$(this).hasClass("click-event-added")){
+                            $(this).addClass("click-event-added");
+                            $(this).click(function(){
+                                var ic = iterationConditions.find(x => x.title == $(this).data("ic"));
+                                if(typeof(ic) != "undefined" && ic != null){
+                                    if(ic.active){
+                                        ic.active = false;
+                                        $(this).text("enable");
+                                    } else {
+                                        ic.active = true;
+                                        $(this).text("disable");
+                                    }
+                                    nickIt.restart();
+                                }
+                            });
+                        }
+                    })
                 });
             }
         }
@@ -830,6 +870,67 @@ class IterationStep {
         }
         html += "</div></div>";
         return { html: html, id: id };
+    }
+}
+/**
+ * the class controls the nickersons iteration
+ */
+class NickersonIteration {
+    /**
+     * the constructor creates a new instance of a nickerson iteration
+     */
+    constructor(){
+        this.rounds = 0;
+        this.unrestrictedApproaches = approaches.map(x => x.id);
+        this.unrestrictedAttributes = attributes.map(x => x.id);
+        this.unrestrictedDimensions = dimensions.map(x => x.id);
+        this.log = [];
+    }
+    render(){
+        $("#approaches").empty();
+        $("#morph-box .body").empty();
+        $(".footer-item.dimensions .text.c").text(this.unrestrictedDimensions.length);
+        $(".footer-item.approaches .text.c").text(this.unrestrictedApproaches.length);
+        $(".footer-item.properties .text.c").text(this.unrestrictedAttributes.length);
+        for (var index in this.unrestrictedApproaches) {
+            var a = approaches.find(x => x.id == this.unrestrictedApproaches[index]);
+            $("#approaches").append(a.toDatalistOption());
+        }
+        for (var index in this.unrestrictedDimensions) {
+            var d = dimensions.find(x => x.id == this.unrestrictedDimensions[index]);
+            var content = d.generateListView(this.unrestrictedAttributes);
+            $("#morph-box .body").append(content.html);
+        }
+    }
+    restart(){
+        this.rounds = 0;
+        this.unrestrictedApproaches = approaches.map(x => x.id);
+        this.unrestrictedAttributes = attributes.map(x => x.id);
+        this.unrestrictedDimensions = dimensions.map(x => x.id);
+        this.log = [];
+        this.start();
+        this.render();
+    }
+    start(){
+        var finished = false;
+        while(!finished){
+            this.rounds++;
+            var uRD = Builder.getUnrestrictedDimensions();
+            var uRA = Builder.getUnrestrictedAttributes();
+            var uRAp = Builder.getUnrestrictedApproaches();
+            this.unrestrictedApproaches = uRAp.value;
+            this.unrestrictedAttributes = uRA.value;
+            this.unrestrictedDimensions = uRD.value;
+            this.log.push({ round: this.rounds, apps: this.unrestrictedApproaches, atts: this.unrestrictedAttributes, dims: this.unrestrictedDimensions });
+            if(uRD.count == 0 && uRA.count == 0 && uRAp.count == 0){
+                finished = true;
+            }
+            if(this.rounds > 4){
+                finished = true;
+                console.log("WHILE BREAK", this);
+            }
+        }
+
     }
 }
 /**

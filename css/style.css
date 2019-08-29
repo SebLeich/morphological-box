@@ -168,10 +168,21 @@ body {
 }
 .footer .footer-item {
     color: grey;
-    width: 150px;
+    width: 200px;
     height: 55px;
     background-color: white;
     display: inline-block;
+    white-space: nowrap;
+}
+.btn {
+    display: block;
+    margin-left: 20px;
+    margin: 3px 0px 5px 20px;
+    cursor: pointer;
+    background-color: #5f77a8;
+    border: none;
+    color: white;
+    padding: 5px 10px;
 }
 .footer .footer-item.flex-width {
     width: auto;
@@ -180,8 +191,12 @@ body {
 }
 .footer .footer-item .text {
     font-size: 38px;
-    margin-right: 5px;
     color: #30425e;
+}
+.footer .footer-item .text.small {
+    font-size: 1rem;
+    color: lightgrey;
+    margin-right: 5px;
 }
 .footer .footer-item.approaches, .footer-item.current-approach {
     border-bottom: 5px solid orange;
