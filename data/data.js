@@ -78,7 +78,7 @@ var approaches = [
         attributes: [10, 11, 12, 64, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125],
         sources: [
             "https://www.wirtschaftsinformatik.uni-rostock.de/forschung/4em/home/die-methode/",
-            "Enterprise Modeling: Tackling Business Challenges with the 4EM Method (Sandkuhl et al, 2014)",
+            "Sandkuhl, Kurt & Stirna, Janis & Persson, Anne & Wißotzki, Matthias. (2014). Enterprise Modeling: Tackling Business Challenges with the 4EM Method.",
             "Unternehmensmodellierung: Grundlagen, Methoden und Praktiken (Sandkuhl et al, 2013)"
         ],
         firstIteration: true
@@ -111,7 +111,7 @@ var approaches = [
         short: null,
         attributes: [15, 64, 74, 75, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113],
         sources: [
-
+            "Card, S. K., Moran, T. P., & Newell, A. (1983). The psychology of human-computer interac-tion. Erlbaum Associates Hillsdale NJ, Hillsdale."
         ],
         firstIteration: true
     }),
@@ -119,7 +119,7 @@ var approaches = [
         id: 8,
         name: "quality of modelling",
         short: "QoMo",
-        attributes: [3, 4, 35, 90, 91, 92, 93, 94, 95, 148],
+        attributes: [3, 4, 52, 90, 91, 92, 93, 94, 95, 148, 166],
         sources: [
             "QoMo: A Modelling Process Quality Framework based on SEQUAL (van Bommel et al, 2007)"
         ],
@@ -199,26 +199,13 @@ var approaches = [
         firstIteration: true
     }),
     new Approach({
-        id: 17,
-        name: "guidelines to achieve enterprise modelling quality",
-        short: null,
-        attributes: [11, 37, 45, 46, 47, 64, 74],
-        sources: [
-            "Quality in Business Process modelling (Krogstie, 2016), p. 63 f"
-        ],
-        authors: [
-            "Sandkuhl"
-        ],
-        firstIteration: false
-    }),
-    new Approach({
         id: 18,
         name: "7 pragmatic guidelines",
         short: "7PMG",
         attributes: [10, 53, 54, 55, 56, 57, 58, 59, 62, 63, 64, 74],
         sources: [
             "Quality in Business Process modelling (Krogstie, 2016), p. 88 f",
-            "http://wwwis.win.tue.nl/~wvdaalst/publications/p574.pdf"
+            "Mendling, Jan & Reijers, H.A. & Aalst, Wil M. P. (2010). Seven Process Modeling Guidelines (7PMG). Information and Software Technology. 52. 127-136. 10.1016/j.infsof.2009.08.004."
         ],
         authors: [
             "Moreno-Montes", "Snoeck"
@@ -260,7 +247,8 @@ var attributes = [
     new Attribute({
         id: 1,
         title: "structural modelling",
-        dim: 1
+        dim: 1,
+        desc: "the approach was originally developed for structural models"
     }),
     new Attribute({
         id: 2,
@@ -269,12 +257,15 @@ var attributes = [
     }),
     new Attribute({
         id: 3,
-        title: "generic",
-        dim: 1
+        title: "modeling process",
+        dim: 1,
+        desc: "the approach was originally developed for evaluating modeling process"
     }),
     new Attribute({
         id: 4,
         title: "idealism",
+        desc: "In philosophy, idealism is the group of metaphysical philosophies that assert that reality, or reality as humans can know it, is fundamentally mental, mentally constructed, or otherwise immaterial.",
+        source: "https://en.wikipedia.org/wiki/Idealism",
         dim: 2
     }),
     new Attribute({
@@ -344,6 +335,7 @@ var attributes = [
     new Attribute({
         id: 16,
         title: "ontological metamodel comparison",
+        desc: "the method compares meta-models of various languages with each other and examines based on them the specification's characteristics",
         dim: 3
     }),
     new Attribute({
@@ -404,6 +396,7 @@ var attributes = [
     new Attribute({
         id: 24,
         title: "empirical quality",
+        desc: "",
         dim: 5,
         source: "Quality in Business Process modelling (Krogstie, 2016), p. 66",
         isEmpiricalAssessable: true
@@ -411,6 +404,7 @@ var attributes = [
     new Attribute({
         id: 25,
         title: "syntactical quality",
+        desc: "",
         dim: 5,
         source: "Quality in Business Process modelling (Krogstie, 2016), p. 66, 91",
         group: 1,
@@ -419,6 +413,7 @@ var attributes = [
     new Attribute({
         id: 26,
         title: "semantical quality",
+        desc: "",
         dim: 5,
         source: "Quality in Business Process modelling (Krogstie, 2016), p. 66",
         group: 1,
@@ -427,6 +422,7 @@ var attributes = [
     new Attribute({
         id: 27,
         title: "pragmatic quality",
+        desc: "",
         dim: 5,
         source: "Quality in Business Process modelling (Krogstie, 2016), p. 66",
         isEmpiricalAssessable: true
@@ -434,6 +430,7 @@ var attributes = [
     new Attribute({
         id: 28,
         title: "social quality",
+        desc: "",
         dim: 5,
         source: "Quality in Business Process modelling (Krogstie, 2016), p. 66",
         isEmpiricalAssessable: true
@@ -441,6 +438,7 @@ var attributes = [
     new Attribute({
         id: 29,
         title: "deontic  quality",
+        desc: "",
         dim: 5,
         source: "Quality in Business Process modelling (Krogstie, 2016), p. 66",
         group: 3,
@@ -602,7 +600,8 @@ var attributes = [
     }),
     new Attribute({
         id: 50,
-        title: "FRISCO framework",
+        title: "semiotic ladder (FRISCO framework)",
+        desc: "the FRISCO report is one of the most eminent fundamentals for modelling evalutaion approaches",
         dim: 6,
         source: "Quality in Business Process modelling (Krogstie, 2016), p. 65"
     }),
@@ -615,6 +614,7 @@ var attributes = [
     new Attribute({
         id: 52,
         title: "SEQUAL",
+        desc: "the SEQUAL framework is a generic modeling language evaluation framework",
         dim: 6,
         source: "Quality in Business Process modelling (Krogstie, 2016), p. 70"
     }),
@@ -684,6 +684,7 @@ var attributes = [
     new Attribute({
         id: 60,
         title: "top-down quality framework",
+        desc: "a top-down quality framework transforms the conceptual requirements into empirical rules",
         dim: 3
     }),
     new Attribute({
@@ -713,11 +714,13 @@ var attributes = [
     new Attribute({
         id: 65,
         title: "EPK",
+        desc: "event driven chains are a modelling method to create bp models",
         dim: 8
     }),
     new Attribute({
         id: 66,
         title: "node-edge-oriented modelling",
+        desc: "generic modelling domain including models of a wide variety of sub-domains such as business process models or conceptual structure models",
         dim: 1
     }),
     new Attribute({
@@ -875,30 +878,35 @@ var attributes = [
         id: 90,
         title: "quality assessment on relations between model-related items [semioticsbased evaluation (simular to SEQUAL) with environment aspects (e.g. knowledge of the modellers, the domain)]",
         source: "QoMo: A Modelling Process Quality Framework based on SEQUAL (van Bommel et al, 2007)",
+        desc: "",
         dim: 3
     }),
     new Attribute({
         id: 91,
         title: "model quality (syntactic)",
         source: "QoMo: A Modelling Process Quality Framework based on SEQUAL (van Bommel et al, 2007), p. 1",
+        desc: "",
         dim: 4,
         group: 1
     }),
     new Attribute({
         id: 92,
         title: "quality of modelling process",
+        desc: "",
         source: "QoMo: A Modelling Process Quality Framework based on SEQUAL (van Bommel et al, 2007), p. 1",
         dim: 4
     }),
     new Attribute({
         id: 93,
         title: "modelling strategy",
+        desc: "",
         source: "QoMo: A Modelling Process Quality Framework based on SEQUAL (van Bommel et al, 2007), p. 6",
         dim: 4
     }),
     new Attribute({
         id: 94,
         title: "usage goal + modelling goal + modelling environment = modelling strategy",
+        desc: "",
         source: "QoMo: A Modelling Process Quality Framework based on SEQUAL (van Bommel et al, 2007), p. 6",
         dim: 5,
         isEmpiricalAssessable: false
@@ -906,6 +914,7 @@ var attributes = [
     new Attribute({
         id: 95,
         title: "quality assessment based on strategy fulfillment and complexity - guided modelling",
+        desc: "",
         source: "QoMo: A Modelling Process Quality Framework based on SEQUAL (van Bommel et al, 2007)",
         dim: 11
     }),
@@ -917,12 +926,14 @@ var attributes = [
     }),
     new Attribute({
         id: 97,
+        desc: "",
         title: "Technology Acceptance Model (TAM)",
         source: "The Method Evaluation Model: a theoretical model for validating information systems design methods (Moody, 2003)",
         dim: 6
     }),
     new Attribute({
         id: 98,
+        desc: "",
         title: "Methodological Pragmatism",
         source: "The Method Evaluation Model: a theoretical model for validating information systems design methods (Moody, 2003)",
         dim: 6
@@ -1284,6 +1295,7 @@ var attributes = [
         id: 148,
         title: "model quality (semantic)",
         source: "QoMo: A Modelling Process Quality Framework based on SEQUAL (van Bommel et al, 2007), p. 1",
+        desc: "",
         dim: 4,
         group: 1
     }),
@@ -1403,6 +1415,13 @@ var attributes = [
         desc: "A type of things is a specific characterisation (e.g. a predicate) applying to all things of that type.",
         source: "A Framework Of Information System Concepts: The FRISCO Report (Falkenberg  et al, 1998), p. 87",
         dim: 11
+    }),
+    new Attribute({
+        id: 166,
+        title: "modeling process",
+        desc: "the quality while model development",
+        source: "",
+        dim: 9
     })
 ];
 /**
@@ -1588,7 +1607,7 @@ var iterationConditions = [
         type: "subjective", title: "comprehensibility",
         exec: function () {
             var dimIds = dimensions.map(x => x.id);
-            var o = attributes.filter(x => x.dim == null || typeof (x.dim) == "undefined" || dimIds.indexOf(x.dim) < 0).map(x => x.id);
+            var o = attributes.filter(x => nickIt.unrestrictedAttributes.includes(x.id) && (x.dim == null || typeof (x.dim) == "undefined" || dimIds.indexOf(x.dim) < 0)).map(x => x.id);
             var html = "<div class='cond-head";
             if (this.overwrittenBy.length > 0) {
                 html += " overwritten";
@@ -1627,7 +1646,7 @@ var iterationConditions = [
         }, overwrittenBy: [], active: true, passFunction: function () {
             var output = [];
             var dimIds = dimensions.map(x => x.id);
-            var o = attributes.filter(x => x.dim == null || typeof (x.dim) == "undefined" || dimIds.indexOf(x.dim) < 0).map(x => x.id);
+            var o = attributes.filter(x => nickIt.unrestrictedAttributes.includes(x.id) && (x.dim == null || typeof (x.dim) == "undefined" || dimIds.indexOf(x.dim) < 0)).map(x => x.id);
             for (var index in attributes) {
                 var a = attributes[index];
                 if (o.indexOf(a.id) > -1) {
@@ -1876,12 +1895,12 @@ var iterationConditions = [
 var iterationSteps = [
     new IterationStep({
         fnr: 1,
-        subtitle: "meta-characteristic of a generic assessment approach",
+        subtitle: "the taxonomie's setting",
         title: "examine a meta characteristic of the domain",
         source: "A method for taxonomy development and its application in information systems (Nickerson, 2013) p. 343",
         desc: "The development of a taxonomy involves determining the characteristics of the objects of interest. The choice of the characteristics in a taxonomy is a central problem in taxonomy development. The characteristics could be based on a theory but in reality any ‘theory’ is often implicit (Aldenderfer & Blashfield, 1984). The researcher must avoid, however, the situation of ‘naı ¨ve empiricism’ in which a large number of related and unrelated characteristics are examined in the hope that a pattern will emerge (Aldenderfer & Blashfield, 1984, p. 20). To avoid this situation and provide a basis for identifying the characteristics of the taxonomy, we specify a meta-characteristic at the beginning of the taxonomy development process. The meta-characteristic is the most comprehensive characteristic that will serve as the basis for the choice of characteristics in the taxonomy. Each characteristic should be a logical consequence of the meta-characteristic. The choice of the meta-characteristic should be based on the purpose of the taxonomy. For example, assume that the researcher is trying to classify computer platforms (hardware and operating system) into a taxonomy. If the researcher’s purpose is to distinguish platforms based on processing power, then the meta-characteristic is the hardware and software characteristics, such as CPU power, memory, and operating system efficiency that impact measures of power such as speed and capacity. On the other hand, if the researcher’s purpose is to distinguish among computer platforms based on how users use them, then the meta-characteristic is the capability of the platform to interact with users, such as the maximum number of simultaneously running applications and the user interface. The purpose of the taxonomy should, in turn, be based on the expected use of the taxonomy and thus could be defined by the eventual users of the taxonomy. The design process could involve first identifying the user(s) of the taxonomy who then specify the projected use of the taxonomy, either explicitly or implicitly. Explicitly, the potential use of a taxonomy could be elicited from actual users using elicitation techniques similar to those employed in requirements analysis (see, e.g., Goguen & Linde, 1993). Alternatively, the researcher could project who the users could be and decide, based on experience, what use the users could make of the taxonomy. In the computer platform example in the previous paragraph, the researcher may wish to develop a taxonomy to be used by customers purchasing computers (the users of the taxonomy). If the researcher projects that these customers will be technology-savvy individuals interested in processing power, then the first taxonomy would be appropriate. On the other hand, if the researcher determines that the customers will be application-savvy individuals interested in how they can use the computer, then the second taxonomy would be appropriate. The choice of the meta-characteristic must be done carefully as it impacts critically the resulting taxonomy. Although ideally the meta-characteristic should be specified before determining the characteristics in the taxonomy our experience has been that the metacharacteristic sometimes does not become clear until part way through the taxonomy development process when we ask ourselves what the overall ‘theme’ is of the characteristics that we have proposed. We have found that this exercise often leads to a clear statement of the meta-characteristic and to eliminating some characteristics and identifying new characteristics. We see meta-characteristics appearing in research that develops taxonomies for various purposes, although they are not identified as such. For example, Nickerson (1997) develops a taxonomy of collaborative applications based on the meta-characteristic of communication among group members. Williams et al (2008) choose two meta-characteristics – design and objectives – in developing their taxonomy of digital services. Leem et al (2004) develop a classification scheme for mobile business models starting with the meta-characteristic of ‘business players’.",
         provider: function () {
-            return dimensions.filter(x => x.metaDimension);
+            return metaCharacteristics;
         }
     }),
     new IterationStep({
@@ -1896,20 +1915,20 @@ var iterationSteps = [
     }),
     new IterationStep({
         fnr: 3,
-        title: "conceptualize characteristics and dimensions of objects",
-        subtitle: "all recognized dimensions",
-        source: "A method for taxonomy development and its application in information systems (Nickerson, 2013) p. 343",
-        provider: function () {
-            return dimensions;
-        }
-    }),
-    new IterationStep({
-        fnr: 4,
         title: "collect objects",
         subtitle: "all assessment approaches considered",
         source: "A method for taxonomy development and its application in information systems (Nickerson, 2013) p. 343",
         provider: function () {
             return approaches;
+        }
+    }),
+    new IterationStep({
+        fnr: 4,
+        title: "common characteristics & object groups, extract dimensions",
+        subtitle: "all recognized dimensions",
+        source: "A method for taxonomy development and its application in information systems (Nickerson, 2013) p. 343",
+        provider: function () {
+            return dimensions;
         }
     }),
     new IterationStep({
@@ -1940,4 +1959,49 @@ var iterationSteps = [
             ]
         }
     })
-]
+];
+/**
+ * a set of meta characteristics 
+ */
+var metaCharacteristics = [
+    new MetaCharacteristic({
+        id: 1,
+        key: "use case",
+        value: "evaluation of a modeling language"
+    }),
+    new MetaCharacteristic({
+        id: 2,
+        key: "audience",
+        value: "students, professorship"
+    }),
+    new MetaCharacteristic({
+        id: 8,
+        key: "context",
+        value: "information systems, business and IT, modeling"
+    }),
+    new MetaCharacteristic({
+        id: 3,
+        key: "object types",
+        value: "modeling language evaluation approaches"
+    }),
+    new MetaCharacteristic({
+        id: 4,
+        key: "time of taxonomy development",
+        value: moment().format("DD.MM.YYYY")
+    }),
+    new MetaCharacteristic({
+        id: 5,
+        key: "evaluation approaches considered",
+        value: approaches.length
+    }),
+    new MetaCharacteristic({
+        id: 6,
+        key: "dimensions considered",
+        value: dimensions.length
+    }),
+    new MetaCharacteristic({
+        id: 7,
+        key: "properties identified",
+        value: attributes.length
+    })
+];

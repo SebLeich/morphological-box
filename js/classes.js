@@ -344,6 +344,7 @@ class Builder {
         var temp = {};
             for(var dim in dimensions){
                 var d = dimensions[dim].id;
+                //             var o = attributes.filter(x => nickIt.unrestrictedAttributes.includes(x.id) && (x.dim == null || typeof (x.dim) == "undefined" || dimIds.indexOf(x.dim) < 0)).map(x => x.id);
                 var at = attributes.filter(x => x.dim == d).map(x => x.id);
                 temp[d] = [];
                 for(var i in at){
@@ -507,18 +508,21 @@ class Builder {
         }
         var u = Attribute.sortAttributesByIsEmpiricalAssessable();
         var data4 = {
-            labels: [], datasets: [], borderWidth: 1
+            labels: [], datasets: [{
+                label: "number of properties",
+                borderColor: "#3983b5c2",
+                backgroundColor: "#3983b53d",
+                data: [],
+                borderWidth: 2
+            }], borderWidth: 1
         };
         var v = Dimension.getAllAttributesForAllDimensions();
         v.sort((a, b) => (a.length > b.length) ? -1 : (a.length < b.length) ? 1 : 0);
         for(var index in v){
             var d = dimensions.find(x => x.id == index);
             if(d != null && typeof(d) != "undefined"){
-                data4.datasets.push({
-                    label: d.title,
-                    data: [v[index].length],
-                    borderWidth: 2
-                });
+                data4.labels.push(d.toString());
+                data4.datasets[0].data.push(v[index].length);
             }
         }
         var data3 = {
@@ -627,6 +631,9 @@ class Builder {
                     }
                 }
             }
+        });
+        $("body").dblclick(function(){
+            console.log(nickIt);
         });
         if (!$("#toggle-chart-cp").hasClass("click-event-added")) {
             $("#toggle-chart-cp").addClass("click-event-added");
@@ -870,6 +877,33 @@ class IterationStep {
         }
         html += "</div></div>";
         return { html: html, id: id };
+    }
+}
+/**
+ * the class contains a meta characteristic
+ */
+class MetaCharacteristic {
+    /**
+     * the constructor creates a new meta characteristic
+     */
+    constructor(object) {
+        this.id = object.id;
+        this.key = object.key;
+        this.value = object.value;
+    }
+    /**
+     * the method generates the dimension's table row
+     */
+    generateListView() {
+        var html = "<div id='" + this.id + "' class='row'><div id='" + this.id + "' class='dimension cell'>" + this.key + "</div>";
+        html += "</div>";
+        return { html: html, id: this.id };
+    }
+    /**
+     * the method creates a representative string of the current instance
+     */
+    toString() {
+        return this.key + ": " + this.value;
     }
 }
 /**
